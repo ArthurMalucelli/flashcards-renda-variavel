@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Flashcards CPA-10 Cap 6 — Renda Variável</title>
+<title>Quiz CPA-10 Cap 6 — Renda Variável</title>
 <style>
   :root {
     --bg-0: #0a0e1a;
@@ -27,40 +27,27 @@
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
   }
-  .app {
-    max-width: 760px;
-    margin: 0 auto;
-    padding: 32px 20px 80px;
-  }
+  .app { max-width: 760px; margin: 0 auto; padding: 32px 20px 80px; }
   header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 28px;
-    padding-bottom: 16px;
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 28px; padding-bottom: 16px;
     border-bottom: 1px solid var(--line);
-    flex-wrap: wrap;
-    gap: 12px;
+    flex-wrap: wrap; gap: 12px;
   }
   .brand {
     display: flex; align-items: center; gap: 12px;
     font-weight: 600; letter-spacing: 0.3px; font-size: 13px;
-    color: var(--muted);
-    text-transform: uppercase;
+    color: var(--muted); text-transform: uppercase;
   }
   .brand .dot {
     width: 10px; height: 10px; border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 12px var(--accent);
+    background: var(--accent); box-shadow: 0 0 12px var(--accent);
   }
   .meta-pills { display: flex; gap: 8px; flex-wrap: wrap; }
   .pill {
-    background: var(--bg-1);
-    border: 1px solid var(--line);
-    padding: 6px 12px;
-    border-radius: 999px;
-    font-size: 12px;
-    color: var(--muted);
+    background: var(--bg-1); border: 1px solid var(--line);
+    padding: 6px 12px; border-radius: 999px;
+    font-size: 12px; color: var(--muted);
     font-variant-numeric: tabular-nums;
   }
   .pill strong { color: var(--text); font-weight: 600; }
@@ -72,58 +59,97 @@
 
   .progress {
     height: 4px; width: 100%;
-    background: var(--bg-1);
-    border-radius: 2px;
-    overflow: hidden;
-    margin-bottom: 28px;
+    background: var(--bg-1); border-radius: 2px;
+    overflow: hidden; margin-bottom: 28px;
   }
   .progress-fill {
-    height: 100%;
+    height: 100%; width: 0%;
     background: linear-gradient(90deg, var(--accent), var(--accent-2));
-    width: 0%;
     transition: width 320ms cubic-bezier(.4,0,.2,1);
   }
 
+  .card {
+    background: var(--bg-1); border: 1px solid var(--line);
+    border-radius: 18px; padding: 32px 28px;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+  }
+
+  .qmeta {
+    font-size: 11px; text-transform: uppercase;
+    letter-spacing: 1.4px; color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .qtext { font-size: 21px; line-height: 1.45; font-weight: 500; margin-bottom: 24px; }
+
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .opt {
+    display: flex; align-items: flex-start; gap: 14px;
+    background: var(--bg-2); border: 1px solid var(--line);
+    border-radius: 12px; padding: 16px 18px;
+    cursor: pointer; transition: all 160ms ease;
+    text-align: left; font-size: 15px; line-height: 1.5;
+    color: var(--text); font-family: inherit; width: 100%;
+  }
+  .opt:hover:not(:disabled) { border-color: var(--accent); transform: translateY(-1px); }
+  .opt:disabled { cursor: default; }
+  .opt .letter {
+    flex-shrink: 0; width: 28px; height: 28px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.06);
+    display: grid; place-items: center;
+    font-weight: 600; font-size: 13px; color: var(--muted);
+  }
+  .opt.correct { border-color: var(--good); background: rgba(61, 220, 132, 0.12); }
+  .opt.correct .letter { background: var(--good); color: #0a0e1a; }
+  .opt.wrong { border-color: var(--bad); background: rgba(255, 77, 109, 0.12); }
+  .opt.wrong .letter { background: var(--bad); color: white; }
+
+  .explain {
+    margin-top: 22px; padding: 16px 18px;
+    border-radius: 12px;
+    background: rgba(124, 92, 255, 0.08);
+    border: 1px solid rgba(124, 92, 255, 0.25);
+    font-size: 14px; line-height: 1.55;
+    color: var(--text); display: none;
+  }
+  .explain.show { display: block; }
+  .explain b { color: var(--accent); }
+
+  .actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 22px; }
+  button.btn {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #0a0e1a; border: none; border-radius: 10px;
+    padding: 12px 22px; font-weight: 700; font-size: 14px;
+    cursor: pointer; font-family: inherit;
+    letter-spacing: 0.3px; transition: transform 120ms ease;
+  }
+  button.btn:hover { transform: translateY(-1px); }
+  button.btn.ghost { background: transparent; color: var(--muted); border: 1px solid var(--line); }
+
   /* Intro */
   .intro {
-    text-align: center;
-    padding: 50px 28px;
-    background: var(--bg-1);
-    border: 1px solid var(--line);
+    text-align: center; padding: 50px 28px;
+    background: var(--bg-1); border: 1px solid var(--line);
     border-radius: 18px;
   }
   .intro h1 {
-    font-size: 30px;
-    margin: 0 0 8px;
+    font-size: 30px; margin: 0 0 8px;
     background: linear-gradient(135deg, var(--accent), var(--accent-2));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
   }
   .intro p {
-    color: var(--muted);
-    font-size: 14px;
-    line-height: 1.6;
-    max-width: 460px;
-    margin: 0 auto 32px;
+    color: var(--muted); font-size: 14px; line-height: 1.6;
+    max-width: 460px; margin: 0 auto 32px;
   }
   .level-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 14px;
-    margin-top: 28px;
-    text-align: left;
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 14px; margin-top: 28px; text-align: left;
   }
   .level-card {
-    background: var(--bg-2);
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    padding: 22px 20px;
-    cursor: pointer;
-    transition: all 180ms ease;
-    color: var(--text);
-    font-family: inherit;
-    text-align: left;
+    background: var(--bg-2); border: 1px solid var(--line);
+    border-radius: 14px; padding: 22px 20px;
+    cursor: pointer; transition: all 180ms ease;
+    color: var(--text); font-family: inherit; text-align: left;
   }
   .level-card:hover { transform: translateY(-2px); border-color: var(--accent); }
   .level-card .lvl-name { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
@@ -134,171 +160,35 @@
   .level-card.dificil { border-left: 3px solid var(--bad); }
   .level-card.misturado { border-left: 3px solid var(--accent-2); }
 
-  /* Card flashcard */
-  .card-stage {
-    perspective: 1500px;
-    width: 100%;
-    margin: 0 auto;
-  }
-  .flashcard {
-    position: relative;
-    width: 100%;
-    min-height: 360px;
-    transform-style: preserve-3d;
-    transition: transform 600ms cubic-bezier(.4,0,.2,1);
-    cursor: pointer;
-  }
-  .flashcard.flipped { transform: rotateY(180deg); }
-  .face {
-    position: absolute;
-    inset: 0;
-    backface-visibility: hidden;
-    background: var(--bg-1);
-    border: 1px solid var(--line);
-    border-radius: 18px;
-    padding: 40px 32px;
-    box-shadow: 0 24px 60px rgba(0,0,0,0.35);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-  }
-  .face.back {
-    transform: rotateY(180deg);
-    background: linear-gradient(160deg, var(--bg-2), var(--bg-1));
-  }
-  .face .label {
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 1.6px;
-    color: var(--muted);
-    margin-bottom: 16px;
-  }
-  .face.front .question {
-    font-size: 22px;
-    font-weight: 500;
-    line-height: 1.45;
-  }
-  .face.back .answer {
-    font-size: 17px;
-    line-height: 1.55;
-    text-align: left;
-  }
-  .face .hint {
-    font-size: 11px;
-    color: var(--muted);
-    margin-top: 24px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-
-  .controls {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 22px;
-    gap: 10px;
-  }
-  .controls .left { display: flex; gap: 8px; }
-  .controls .right { display: flex; gap: 8px; }
-  button.btn {
-    background: linear-gradient(135deg, var(--accent), var(--accent-2));
-    color: #0a0e1a;
-    border: none;
-    border-radius: 10px;
-    padding: 12px 20px;
-    font-weight: 700;
-    font-size: 13px;
-    cursor: pointer;
-    font-family: inherit;
-    letter-spacing: 0.3px;
-    transition: transform 120ms ease;
-  }
-  button.btn:hover { transform: translateY(-1px); }
-  button.btn.ghost {
-    background: transparent;
-    color: var(--muted);
-    border: 1px solid var(--line);
-  }
-  button.btn.good { background: var(--good); color: #0a0e1a; }
-  button.btn.bad { background: var(--bad); color: white; }
-
-  .self-rating {
-    display: none;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 22px;
-  }
-  .self-rating.show { display: flex; }
-  .rating-label {
-    text-align: center;
-    color: var(--muted);
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-top: 22px;
-    margin-bottom: -4px;
-  }
-
   /* Final */
-  .final {
-    text-align: center;
-    padding: 50px 28px;
-    background: var(--bg-1);
-    border: 1px solid var(--line);
-    border-radius: 18px;
-  }
+  .final { text-align: center; padding: 50px 28px; background: var(--bg-1); border: 1px solid var(--line); border-radius: 18px; }
   .final .ring {
-    width: 180px; height: 180px;
-    margin: 0 auto 24px;
+    width: 180px; height: 180px; margin: 0 auto 24px;
     border-radius: 50%;
     background: conic-gradient(var(--accent) calc(var(--p) * 1%), var(--bg-2) 0);
-    display: grid; place-items: center;
-    position: relative;
+    display: grid; place-items: center; position: relative;
   }
-  .final .ring::before {
-    content: ""; position: absolute; inset: 12px;
-    background: var(--bg-1); border-radius: 50%;
-  }
-  .final .ring .pct {
-    position: relative; font-size: 38px; font-weight: 700;
-    font-variant-numeric: tabular-nums;
-  }
+  .final .ring::before { content: ""; position: absolute; inset: 12px; background: var(--bg-1); border-radius: 50%; }
+  .final .ring .pct { position: relative; font-size: 38px; font-weight: 700; font-variant-numeric: tabular-nums; }
   .final h2 { margin: 0 0 8px; font-size: 26px; }
   .final p.sub { color: var(--muted); margin-bottom: 28px; }
-  .review {
-    text-align: left;
-    margin-top: 32px;
-    border-top: 1px solid var(--line);
-    padding-top: 24px;
-  }
+  .review { text-align: left; margin-top: 32px; border-top: 1px solid var(--line); padding-top: 24px; }
   .review h3 { font-size: 13px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--muted); }
   .review-item {
-    background: var(--bg-2);
-    border-left: 3px solid var(--bad);
-    padding: 14px 16px;
-    border-radius: 8px;
-    margin-bottom: 10px;
-    font-size: 14px;
+    background: var(--bg-2); border-left: 3px solid var(--bad);
+    padding: 14px 16px; border-radius: 8px;
+    margin-bottom: 10px; font-size: 14px;
   }
   .review-item .q { font-weight: 600; margin-bottom: 6px; }
   .review-item .a { color: var(--muted); font-size: 13px; }
+  .review-item .a b { color: var(--good); }
 
-  .footer {
-    text-align: center;
-    color: var(--muted);
-    font-size: 11px;
-    margin-top: 32px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
+  .footer { text-align: center; color: var(--muted); font-size: 11px; margin-top: 32px; text-transform: uppercase; letter-spacing: 1px; }
 
   @media (max-width: 600px) {
-    .face.front .question { font-size: 18px; }
-    .face.back .answer { font-size: 15px; }
-    .face { padding: 32px 22px; }
+    .qtext { font-size: 18px; }
+    .card { padding: 24px 20px; }
     .level-grid { grid-template-columns: 1fr; }
-    .flashcard { min-height: 320px; }
   }
 </style>
 </head>
@@ -306,7 +196,7 @@
 <div class="app">
 
 <header>
-  <div class="brand"><span class="dot"></span> Flashcards · Renda Variável</div>
+  <div class="brand"><span class="dot"></span> Quiz · Renda Variável</div>
   <div class="meta-pills" id="metaPills"></div>
 </header>
 
@@ -316,145 +206,145 @@
 
 <div id="screen"></div>
 
-<div class="footer">CPA-10 ANBIMA · Cap 6.1 Ações · Treino pra gameshow</div>
+<div class="footer">CPA-10 ANBIMA · Cap 6.1 Ações · 120 questões</div>
 
 </div>
 
 <script>
 const FACIL = [
-  { q: "O que é uma ação?", a: "Fração ideal do capital social de uma S.A. Quem detém é sócio da empresa, com exposição ao upside e downside dos resultados." },
-  { q: "Renda fixa vs renda variável, em uma frase?", a: "Renda fixa = promessa de pagamento (dívida). Renda variável = participação no capital, sem retorno garantido." },
-  { q: "ON significa o quê?", a: "Ação Ordinária Nominativa." },
-  { q: "PN significa o quê?", a: "Ação Preferencial Nominativa." },
-  { q: "Qual o dígito final de uma ação ON na B3?", a: "3. Exemplos: PETR3, VALE3, ABEV3." },
-  { q: "Qual o dígito final de uma ação PN na B3?", a: "4. Exemplos: PETR4, ITUB4, BBDC4." },
-  { q: "Qual o lote-padrão de negociação na B3?", a: "100 ações." },
-  { q: "Quem dá direito a voto em assembleia, ON ou PN?", a: "ON. PN só vota em casos excepcionais previstos em lei." },
-  { q: "Quem tem prioridade no recebimento de dividendos?", a: "Acionistas preferenciais (PN)." },
-  { q: "O que é capital próprio da empresa?", a: "Patrimônio líquido: recursos aportados pelos sócios + lucros retidos. Pertence aos acionistas." },
-  { q: "O que é capital de terceiros?", a: "Dívidas da empresa: debêntures, empréstimos bancários etc. Pertence aos credores." },
-  { q: "O que é IPO?", a: "Initial Public Offering. Primeira venda pública de ações de uma empresa, marcando a abertura de capital." },
-  { q: "O que é uma CTVM?", a: "Sociedade Corretora de Títulos e Valores Mobiliários. Intermedia ordens entre investidor e bolsa." },
-  { q: "O que é uma DTVM?", a: "Sociedade Distribuidora de Títulos e Valores Mobiliários. Desde 2009 equiparada à corretora." },
-  { q: "O que é home broker?", a: "Plataforma eletrônica que permite ao investidor enviar ordens à corretora pela internet, sem operador humano." },
-  { q: "O que é um dividendo?", a: "Distribuição de parte do lucro líquido aos acionistas, em proporção ao número de ações." },
-  { q: "O que é JCP?", a: "Juros sobre Capital Próprio. Forma de remuneração do acionista a partir de lucros retidos de exercícios anteriores, com vantagem fiscal pra empresa." },
-  { q: "O que é bonificação em ações?", a: "Distribuição gratuita de novas ações aos acionistas, originada na capitalização de reservas de lucro. Sem entrada de dinheiro novo." },
-  { q: "O que é subscrição?", a: "Oferta de novas ações pra compra. Aumenta o capital social da empresa, com entrada efetiva de recursos." },
-  { q: "O que é desdobramento (split)?", a: "Divisão de uma ação em N ações novas, com queda proporcional no preço unitário." },
-  { q: "O que é grupamento (inplit)?", a: "Agrupamento de N ações em uma só, com aumento proporcional no preço unitário. Inverso do split." },
-  { q: "O que é ganho de capital?", a: "Diferença positiva entre o preço de venda e o preço de compra de um ativo." },
-  { q: "O que é day trade?", a: "Operação de compra e venda do mesmo ativo no mesmo dia, no mesmo intermediário." },
-  { q: "O que é risco sistemático?", a: "Risco de mercado. Afeta todos os ativos, causado por crises, juros, política. Não pode ser eliminado por diversificação." },
-  { q: "O que é risco não sistemático?", a: "Risco específico de uma empresa ou setor. Pode ser eliminado por diversificação." },
-  { q: "O que é risco de liquidez?", a: "Risco de não conseguir negociar um ativo a um preço justo, por falta de contraparte ou pouca profundidade do mercado." },
-  { q: "Que despesa cobra a corretora pela intermediação?", a: "Corretagem." },
-  { q: "Que despesa é cobrada pela B3 por operação?", a: "Emolumentos." },
-  { q: "Que despesa remunera a manutenção da posição em conta?", a: "Taxa de custódia." },
-  { q: "O que é um clube de investimento?", a: "Comunhão de recursos de pessoas físicas (3 a 50) pra investir em valores mobiliários, com foco obrigatório em renda variável." },
-  { q: "O que é mercado primário?", a: "Onde os ativos são vendidos pela primeira vez. Recursos vão pro emissor (a empresa)." },
-  { q: "O que é mercado secundário?", a: "Onde os ativos já existentes são negociados entre investidores. Recursos vão pro vendedor, não pra empresa." },
-  { q: "Qual a principal bolsa de valores do Brasil?", a: "B3 S.A. (Brasil, Bolsa, Balcão). Empresa de capital aberto que provê a infraestrutura do mercado financeiro brasileiro." },
-  { q: "O que é uma S.A.?", a: "Sociedade Anônima. Empresa cujo capital é dividido em ações, podendo ser negociadas (capital aberto) ou não (capital fechado)." },
-  { q: "O que é um acionista?", a: "Pessoa física ou jurídica que detém ações de uma empresa. É sócio em proporção à participação." },
-  { q: "O que é o Estatuto Social?", a: "Documento que rege a S.A.: define percentual mínimo de dividendo, direitos de cada classe de ação, periodicidade de pagamentos etc." },
-  { q: "O que é o Ibovespa?", a: "Principal índice acionário da B3, composto pelas ações mais negociadas e representativas do mercado brasileiro." },
-  { q: "O que é provento?", a: "Qualquer remuneração paga pela empresa ao acionista pela posse das ações: dividendos, JCP, bonificações." },
-  { q: "O que é ETF?", a: "Exchange Traded Fund. Fundo de índice negociado em bolsa como uma ação, replica a composição de um índice (ex: BOVA11 replica o Ibovespa)." },
-  { q: "O que é um cotista?", a: "Pessoa que detém cotas de um fundo ou clube de investimento, em proporção ao valor aportado." }
+  { q: "O que é uma ação?", opts: ["Um título de dívida emitido pela empresa","Fração ideal do capital social de uma S.A.","Um contrato de derivativos","Cota de fundo de investimento"], correct: 1, why: "Ação representa uma fração do capital social. Quem detém é sócio, com exposição a upside e downside." },
+  { q: "Qual a principal diferença entre renda fixa e renda variável?", opts: ["Renda fixa tem prazo, renda variável não","Renda fixa = promessa de pagamento (dívida); renda variável = participação no capital","Renda fixa é tributada, renda variável é isenta","Renda fixa é sempre rentável, renda variável dá prejuízo"], correct: 1, why: "Renda fixa = dívida/capital de terceiros. Renda variável = participação no capital próprio." },
+  { q: "ON significa:", opts: ["Operação Negociada","Ação Ordinária Nominativa","Oferta Negocial","Obrigação Negociável"], correct: 1, why: "ON = Ordinária Nominativa. Toda ação no Brasil é nominativa." },
+  { q: "PN significa:", opts: ["Participação Nominal","Ação Preferencial Nominativa","Posição Negociada","Provento Nominativo"], correct: 1, why: "PN = Preferencial Nominativa." },
+  { q: "Qual o dígito final de uma ação ON na B3?", opts: ["3","4","5","6"], correct: 0, why: "ON termina em 3 (PETR3, VALE3, ABEV3). PN termina em 4." },
+  { q: "Qual o dígito final de uma ação PN na B3?", opts: ["3","4","5","11"], correct: 1, why: "PN termina em 4 (PETR4, ITUB4, BBDC4)." },
+  { q: "Qual o lote-padrão de negociação na B3?", opts: ["10 ações","50 ações","100 ações","1000 ações"], correct: 2, why: "Lote-padrão = 100 ações. Por isso ação cara demanda investimento mínimo alto." },
+  { q: "Quem dá direito a voto em assembleia?", opts: ["PN","ON","Ambas","Nenhuma"], correct: 1, why: "ON dá voto. PN não vota, salvo exceções legais." },
+  { q: "Quem tem prioridade no recebimento de dividendos?", opts: ["ON","PN","Ambas igualmente","Acionista controlador"], correct: 1, why: "PN tem prioridade em dividendos e em reembolso de capital. Em troca, abre mão do voto." },
+  { q: "Capital próprio da empresa é:", opts: ["Dívidas com bancos","Patrimônio líquido (recursos dos sócios + lucros retidos)","Caixa em conta corrente","Valor de mercado das ações"], correct: 1, why: "Capital próprio = PL. Pertence aos acionistas." },
+  { q: "Capital de terceiros é:", opts: ["Dinheiro investido por sócios estrangeiros","Dívidas da empresa (debêntures, empréstimos)","Lucros distribuídos","Reservas de caixa"], correct: 1, why: "Capital de terceiros = dívidas. Pertence aos credores." },
+  { q: "O que é IPO?", opts: ["Investimento Público Obrigatório","Initial Public Offering: primeira venda pública de ações","Imposto sobre Operação","Índice de Performance Operacional"], correct: 1, why: "IPO = primeira oferta pública. Marca a abertura de capital da empresa." },
+  { q: "O que é uma CTVM?", opts: ["Centro de Tributação de Valores Mobiliários","Sociedade Corretora de Títulos e Valores Mobiliários","Conselho Técnico de Valores Mobiliários","Câmara de Tesouraria de Valores Mobiliários"], correct: 1, why: "CTVM = corretora. Intermedia ordens entre investidor e bolsa." },
+  { q: "O que é uma DTVM?", opts: ["Departamento de Tributação","Sociedade Distribuidora de Títulos e Valores Mobiliários","Diretoria Técnica","Divisão de Tesouraria"], correct: 1, why: "DTVM = distribuidora. Equiparada à corretora desde 2009." },
+  { q: "O que é home broker?", opts: ["Corretor que trabalha em casa","Plataforma eletrônica que envia ordens à corretora pela internet","Tipo especial de corretora online","Aplicativo do banco para acompanhar ações"], correct: 1, why: "Home broker é a interface eletrônica do investidor, vinculada à corretora, que envia ordens em milissegundos à bolsa." },
+  { q: "O que é dividendo?", opts: ["Imposto sobre lucro","Distribuição de parte do lucro líquido aos acionistas","Cobrança da corretora","Taxa de administração"], correct: 1, why: "Dividendo = parcela do lucro líquido distribuída pra acionistas em proporção às ações." },
+  { q: "O que é JCP?", opts: ["Juros sobre Capital Próprio: remuneração ao acionista a partir de lucros retidos","Juros do Crédito Pessoal","Juros do Cartão Premium","Juros do Capital Promovido"], correct: 0, why: "JCP = remuneração via lucros retidos. Tem vantagem fiscal pra empresa (dedutível) e tributa o acionista a 15%." },
+  { q: "Bonificação em ações é:", opts: ["Compra de ações por executivos","Distribuição gratuita de novas ações via capitalização de reservas","Imposto sobre dividendo","Direito de preferência em IPO"], correct: 1, why: "Bonificação = ações novas distribuídas gratuitamente, originadas de reservas de lucro. Sem entrada de caixa novo." },
+  { q: "Subscrição de ações é:", opts: ["Compra de cotas de fundo","Oferta de novas ações pra compra (aumento de capital)","Imposto sobre IPO","Cancelamento de ações"], correct: 1, why: "Subscrição = oferta de novas ações. Aumenta capital social, traz dinheiro novo (diferente da bonificação)." },
+  { q: "Desdobramento (split) é:", opts: ["Divisão de uma ação em N ações novas, com queda proporcional no preço","Junção de várias ações em uma","Distribuição extra de dividendos","Recompra de ações pela empresa"], correct: 0, why: "Split aumenta a quantidade e reduz o preço unitário, sem alterar o patrimônio do acionista." },
+  { q: "Grupamento (inplit) é:", opts: ["Distribuição de ações","Agrupamento de N ações em uma só, com aumento proporcional do preço","Cisão da empresa","Fusão com outra empresa"], correct: 1, why: "Grupamento é o inverso do split. Reduz a quantidade e aumenta o preço unitário, patrimônio inalterado." },
+  { q: "Ganho de capital é:", opts: ["Aumento do capital social da empresa","Diferença positiva entre preço de venda e preço de compra","Distribuição de dividendos","Juros recebidos sobre o investimento"], correct: 1, why: "Ganho de capital = preço de venda menos preço de compra (descontados custos), quando positivo." },
+  { q: "Day trade é:", opts: ["Operação de compra e venda do mesmo ativo no mesmo dia","Operação que dura mais de 24h","Operação só permitida pra investidor profissional","Tipo de derivativo"], correct: 0, why: "Day trade = compra e venda no mesmo dia. Tributação especial: 20% sem isenção." },
+  { q: "Risco sistemático é:", opts: ["Risco específico de uma empresa","Risco de mercado, afeta todos os ativos, não eliminável por diversificação","Risco operacional da corretora","Risco de fraude"], correct: 1, why: "Sistemático = de mercado. Causado por crises, juros, política. Não diversificável." },
+  { q: "Risco não sistemático é:", opts: ["Risco de mercado","Risco específico de uma empresa, eliminável por diversificação","Risco do sistema bancário","Risco regulatório do país"], correct: 1, why: "Não sistemático = idiossincrático = específico da empresa. Some quando se diversifica." },
+  { q: "Risco de liquidez é:", opts: ["Risco da empresa quebrar","Risco de não conseguir negociar o ativo a um preço justo","Risco de inflação","Risco do gestor da carteira"], correct: 1, why: "Liquidez = facilidade de negociar. Risco de liquidez é vender abaixo do justo (ou não vender) por falta de contraparte." },
+  { q: "Quem cobra a corretagem?", opts: ["A B3","A corretora","O Banco Central","A CVM"], correct: 1, why: "Corretagem = receita da corretora pelo serviço de intermediação." },
+  { q: "Quem cobra os emolumentos?", opts: ["A corretora","A B3","A Receita Federal","A CVM"], correct: 1, why: "Emolumentos = receita da B3 por operação registrada na bolsa." },
+  { q: "A taxa de custódia remunera:", opts: ["A intermediação da ordem","O registro da operação na bolsa","A manutenção da posição em conta junto à Clearing da B3","O imposto de renda devido"], correct: 2, why: "Custódia = manter o ativo na sua conta. Cobrada por corretora ou banco, repasse do custo da Clearing." },
+  { q: "Clube de investimento é:", opts: ["Fundo de pensão fechado","Comunhão de recursos de pessoas físicas (3 a 50) pra investir em valores mobiliários","Tipo de seguradora","Cooperativa de crédito"], correct: 1, why: "Clube é versão soft de fundo. Foco em renda variável (mín 67%), 3-50 cotistas, regras menos rigorosas." },
+  { q: "Mercado primário é:", opts: ["Onde se negocia ações já existentes","Onde os ativos são vendidos pela primeira vez (recursos vão pro emissor)","O maior mercado da B3","Onde só profissionais operam"], correct: 1, why: "Primário = primeira venda. Recursos vão pra empresa emissora. IPO é o exemplo clássico." },
+  { q: "Mercado secundário é:", opts: ["Onde se faz IPO","Onde investidores negociam ativos já existentes entre si","Mercado de balcão","Mercado de derivativos"], correct: 1, why: "Secundário = onde acontece a negociação do dia a dia, entre investidores. Empresa não recebe recursos." },
+  { q: "Qual a principal bolsa de valores do Brasil?", opts: ["NYSE","Nasdaq","B3","BMF"], correct: 2, why: "B3 (Brasil, Bolsa, Balcão). Resultado da fusão da BM&FBovespa com a Cetip em 2017." },
+  { q: "S.A. significa:", opts: ["Sociedade Anônima","Setor Acionário","Sociedade de Acionistas","Sigla Administrativa"], correct: 0, why: "S.A. = Sociedade Anônima. Empresa com capital dividido em ações." },
+  { q: "Acionista é:", opts: ["Funcionário da empresa","Pessoa física ou jurídica que detém ações de uma empresa, sócio em proporção","Conselheiro da empresa","Cliente da empresa"], correct: 1, why: "Acionista é sócio. Tem direitos patrimoniais (dividendo) e, se ON, políticos (voto)." },
+  { q: "O Estatuto Social é:", opts: ["Regulamento interno do RH","Documento que rege a S.A.: define direitos das ações, dividendo mínimo, periodicidade","Lei federal específica","Contrato com o banco"], correct: 1, why: "Estatuto Social = constituição da S.A. Define dividendo mínimo, classes de ação, governança." },
+  { q: "Ibovespa é:", opts: ["Imposto sobre operações em bolsa","Principal índice acionário da B3","Bolsa de valores secundária","Câmara de compensação"], correct: 1, why: "Ibovespa = índice composto pelas ações mais negociadas e representativas do mercado brasileiro." },
+  { q: "Provento é:", opts: ["Imposto pago pela empresa","Qualquer remuneração do acionista pela posse das ações (dividendo, JCP, bonificação)","Lucro retido","Receita operacional"], correct: 1, why: "Provento é o termo guarda-chuva: dividendo, JCP, bonificação. Tudo que o acionista recebe pela posse." },
+  { q: "ETF é:", opts: ["Empresa de Tributação Financeira","Exchange Traded Fund: fundo de índice negociado em bolsa como ação","Estrutura de Tesouraria Financeira","Emissão de Títulos Federais"], correct: 1, why: "ETF replica um índice (ex: BOVA11 replica o Ibovespa). Negociado como ação." },
+  { q: "Cotista é:", opts: ["Quem trabalha em corretora","Pessoa que detém cotas de fundo ou clube de investimento","Acionista controlador","Auditor da CVM"], correct: 1, why: "Cotista = dono de cotas. Equivalente a acionista, mas em fundo/clube em vez de S.A." }
 ];
 
 const MEDIO = [
-  { q: "Qual segmento da B3 só admite ações ordinárias?", a: "Novo Mercado. Padrão de governança superior desde 2000, exige só ON no capital social." },
-  { q: "O que ocorre quando a demanda em um IPO supera a oferta?", a: "Sobredemanda. Gera rateio: cada investidor recebe parcela proporcional ao pedido feito no período de reserva." },
-  { q: "Diferença entre ordem limitada e ordem a mercado em IPO?", a: "Limitada: investidor define preço máximo, só compra se preço final for igual ou inferior. A mercado: aceita qualquer preço final, garante a execução." },
-  { q: "Em uma oferta primária, quem recebe os recursos?", a: "A empresa. Aumenta o capital social. Em oferta secundária os recursos vão pros acionistas vendedores, não pra empresa." },
-  { q: "O que é período de reserva em um IPO?", a: "Janela em que o investidor manifesta interesse à corretora, indicando quantas ações ou que valor em R$ deseja adquirir." },
-  { q: "Como são tributados os dividendos pra pessoa física?", a: "Isentos de IR. O lucro já foi tributado na empresa antes." },
-  { q: "Como é tributado o JCP pra pessoa física?", a: "15% de IR retido na fonte." },
-  { q: "Por que o JCP existe pra empresa?", a: "É dedutível da base de IRPJ e CSLL no lucro real. A empresa paga menos imposto distribuindo JCP do que pagaria distribuindo dividendo." },
-  { q: "Bonificação altera o valor de mercado da empresa?", a: "Não. Só reclassifica reservas de lucro pra capital social. Acionista fica com mais ações a preço menor, valor total inalterado." },
-  { q: "Subscrição traz dinheiro novo pra empresa?", a: "Sim. É justamente o aumento de capital efetivo, com novos recursos entrando." },
-  { q: "Split altera o patrimônio do acionista?", a: "Não. Só muda quantidade de ações (sobe) e preço unitário (cai), proporcionalmente. Valor patrimonial total e participação % permanecem." },
-  { q: "Por que uma empresa faz grupamento de ações?", a: "Sair da faixa de penny stock (< R$ 1), reduzir volatilidade, evitar exclusão do Ibovespa." },
-  { q: "Risco sistemático pode ser eliminado por diversificação?", a: "Não. Sobra mesmo com carteira amplamente diversificada. É o risco intrínseco de estar em ações." },
-  { q: "Risco específico de uma empresa pode ser eliminado por diversificação?", a: "Sim. Carteira com várias ações em setores descorrelacionados converge a zero o risco específico." },
-  { q: "Quais os dois indicadores principais de risco de liquidez em ações?", a: "1. Volume diário negociado da ação. 2. Spread bid-ask (diferença entre melhor preço de compra e melhor preço de venda no book)." },
-  { q: "Qual a alíquota de IR sobre ganho no mercado à vista de ações?", a: "15% sobre o lucro." },
-  { q: "Qual a alíquota de IR sobre lucro em day trade?", a: "20% sobre o lucro." },
-  { q: "A isenção de R$ 20.000 vale pra que valor exatamente?", a: "Pras vendas totais no mês. Se vender até R$ 20k, ganho é isento. Não é sobre o lucro." },
-  { q: "A isenção de R$ 20.000 vale pra day trade?", a: "Não. Day trade nunca tem isenção, sempre 20% sobre o lucro." },
-  { q: "Como funciona a compensação de prejuízos em ações?", a: "Mercado à vista compensa só com à vista. Day trade compensa só com day trade. Nunca cruzam." },
-  { q: "Qual o prazo pra recolher IR sobre ganho em ações?", a: "Até o último dia útil do mês subsequente ao mês de apuração, via DARF." },
-  { q: "Quem calcula e recolhe o IR sobre ganho em ações?", a: "O próprio investidor. A corretora não calcula nem recolhe (só faz a retenção do dedo-duro)." },
-  { q: "Quantos cotistas, mínimo e máximo, em um clube de investimento?", a: "Mínimo 3, máximo 50." },
-  { q: "Qual a concentração máxima de cotas por cotista em um clube?", a: "40% das cotas." },
-  { q: "Qual o percentual mínimo do PL de um clube em renda variável?", a: "67%." },
-  { q: "Quem tipicamente administra um clube de investimento?", a: "Uma corretora. Registra o clube em mercado organizado (B3) e cobra taxa de administração." },
-  { q: "Quem pode gerir a carteira de um clube de investimento?", a: "Profissional autorizado pela CVM, ou um dos cotistas eleito em assembleia." },
-  { q: "Cotista gestor de um clube pode receber remuneração?", a: "Não. Não pode receber remuneração ou benefício direto ou indireto pela gestão." },
-  { q: "S.A. é obrigada a distribuir dividendos? O que define isso?", a: "Sim, obrigada por lei. O Estatuto Social define o percentual mínimo e a periodicidade (anual, semestral ou trimestral)." },
-  { q: "Qual o limite da dedução de JCP pra empresa?", a: "Não pode exceder a TJLP (Taxa de Juros de Longo Prazo) aplicada sobre as contas do patrimônio líquido." },
-  { q: "Quais os três tipos de provento que o acionista pode receber?", a: "Dividendos (lucro líquido distribuído, isento), JCP (lucros retidos, 15% na fonte) e bonificações (em ações ou em dinheiro)." },
-  { q: "O que é a Clearing da B3?", a: "Câmara que faz a custódia centralizada e a liquidação das operações. Antes chamada Câmara de Ações da BM&FBOVESPA. Repassa custos via taxa de custódia." },
-  { q: "Por que dividendos são isentos pro acionista pessoa física?", a: "Porque o lucro já foi tributado na empresa via IRPJ e CSLL. Tributar novamente seria bitributação econômica do mesmo lucro." },
-  { q: "IR retido na fonte (dedo-duro) é deduzido do imposto devido?", a: "Sim. O valor retido na fonte (0,005% à vista, 1% day trade) é abatido do total a pagar via DARF, evitando dupla tributação." },
-  { q: "Qual a diferença prática entre CTVM e DTVM hoje?", a: "Nenhuma. Desde 2009 ambas operam diretamente em bolsa, fazem distribuição, intermediação e custódia. Os dois nomes existem por razão histórica." },
-  { q: "Como o spread bid-ask reflete a liquidez de uma ação?", a: "Spread baixo (compra e venda próximas) indica boa liquidez. Spread alto indica pouca liquidez e maior perda potencial em uma negociação versus o preço justo." },
-  { q: "É comum corretora cobrar taxa de custódia em ações?", a: "Cada vez menos. Muitas corretoras zeram a taxa de custódia como diferencial competitivo, absorvendo o custo da Clearing da B3." },
-  { q: "O que é uma oferta pública de distribuição?", a: "Operação em que valores mobiliários (ações, debêntures, cotas etc.) são ofertados ao público, regulada pela CVM. Pode ser primária ou secundária." },
-  { q: "Quem é o coordenador de uma oferta pública?", a: "Instituição financeira (geralmente banco de investimento ou corretora) responsável por estruturar a oferta, divulgar, conduzir o bookbuilding e distribuir as ações." },
-  { q: "Qual a relação entre Estatuto Social e dividendo obrigatório?", a: "O Estatuto define o percentual mínimo do lucro líquido que deve ser distribuído como dividendo. Se omisso, a Lei das S.A. define 50% do lucro líquido ajustado." }
+  { q: "Qual segmento da B3 só admite ações ordinárias?", opts: ["Bovespa Mais","Nível 1","Nível 2","Novo Mercado"], correct: 3, why: "Novo Mercado, padrão de governança superior desde 2000. Só ON, alinhado a padrão internacional." },
+  { q: "O que ocorre quando a demanda em IPO supera a oferta?", opts: ["O IPO é cancelado","Sobredemanda: gera rateio proporcional aos pedidos","O preço aumenta automaticamente","Apenas institucionais recebem"], correct: 1, why: "Sobredemanda gera rateio. Cada investidor recebe parte proporcional ao que pediu na reserva." },
+  { q: "Em uma ordem LIMITADA num IPO, o investidor:", opts: ["Aceita qualquer preço final","Define o preço máximo que aceita pagar","Compra apenas se houver rateio","Cancela automaticamente após período de reserva"], correct: 1, why: "Limitada protege contra preço alto. Se preço final > limite, não compra. Ordem a mercado é o oposto." },
+  { q: "Em oferta primária, quem recebe os recursos?", opts: ["Os acionistas vendedores","A empresa (aumenta capital social)","O coordenador da oferta","O fundo garantidor"], correct: 1, why: "Primária = ações novas, recursos vão pra empresa. Secundária = ações existentes, recursos vão pros vendedores." },
+  { q: "Período de reserva em IPO é:", opts: ["Tempo de carência após a compra","Janela em que o investidor manifesta interesse à corretora","Reserva legal de lucros","Período em que ações ficam bloqueadas"], correct: 1, why: "Reserva = janela de manifestação de interesse. Investidor diz quanto quer comprar (ações ou R$)." },
+  { q: "Como dividendos são tributados pra pessoa física no Brasil?", opts: ["15% retido na fonte","20% via DARF","Isentos de IR","Tabela progressiva"], correct: 2, why: "Dividendos isentos. Lucro já foi tributado na empresa via IRPJ/CSLL antes." },
+  { q: "Como JCP é tributado pra pessoa física?", opts: ["Isento","15% retido na fonte","20% via DARF","22,5% conforme tabela"], correct: 1, why: "JCP = 15% retido na fonte. Como a empresa deduziu o JCP do IR, a Receita cobra na ponta do acionista." },
+  { q: "Por que o JCP existe?", opts: ["É obrigatório por lei","É dedutível do IRPJ/CSLL pra empresa, vantagem fiscal","Substitui dividendos quando há prejuízo","Só PN recebe"], correct: 1, why: "JCP é dedutível do imposto da empresa no lucro real. Por isso a empresa prefere distribuir JCP a dividendo." },
+  { q: "Bonificação altera o valor de mercado da empresa?", opts: ["Sim, aumenta","Sim, diminui","Não, só reclassifica reservas em capital social","Depende do volume distribuído"], correct: 2, why: "Bonificação = movimentação interna no PL. Acionista tem mais ações a preço menor, valor total inalterado." },
+  { q: "Subscrição traz dinheiro novo pra empresa?", opts: ["Não, só reclassifica contas","Sim, é aumento de capital efetivo","Só se for privada","Só se for pública"], correct: 1, why: "Subscrição = entrada de caixa novo, aumento de capital social. Diferente da bonificação." },
+  { q: "Split altera o patrimônio do acionista?", opts: ["Sim, aumenta","Sim, diminui","Não, só muda quantidade e preço unitário","Só se houver dividendo simultâneo"], correct: 2, why: "Split: mais ações a preço menor. Patrimônio total e participação % permanecem." },
+  { q: "Por que uma empresa faz grupamento de ações?", opts: ["Pra aumentar capital","Pra sair da faixa de penny stock e reduzir volatilidade","Pra distribuir dividendos","Pra reduzir número de acionistas"], correct: 1, why: "Grupamento tira penny stock da exclusão do Ibovespa e reduz volatilidade da % por R$ 0,01." },
+  { q: "Risco sistemático pode ser eliminado por diversificação?", opts: ["Sim, totalmente","Sim, parcialmente","Não, é o risco de estar em ações","Só com derivativos"], correct: 2, why: "Sistemático = de mercado, não diversificável. Sobra independente da carteira." },
+  { q: "Risco específico pode ser eliminado por diversificação?", opts: ["Não","Sim, é justamente o que a diversificação resolve","Só em mercados desenvolvidos","Só com mais de 100 ações"], correct: 1, why: "Específico (não sistemático) some à medida que se diversifica." },
+  { q: "Quais os principais indicadores de risco de liquidez em ações?", opts: ["Volatilidade e dividend yield","Volume diário negociado e spread bid-ask","P/L e ROE","Beta e alfa"], correct: 1, why: "Liquidez se mede por volume e spread. Spread alto = liquidez baixa = perda potencial em vender." },
+  { q: "Alíquota de IR sobre ganho no mercado à vista de ações:", opts: ["10%","15%","20%","22,5%"], correct: 1, why: "À vista = 15% sobre o lucro." },
+  { q: "Alíquota de IR sobre lucro em day trade:", opts: ["15%","17,5%","20%","22,5%"], correct: 2, why: "Day trade = 20%. Sem isenção dos R$ 20.000." },
+  { q: "Isenção de R$ 20.000 vale para que valor exatamente?", opts: ["Pro lucro","Pras vendas totais no mês","Pra receita acumulada no ano","Pro patrimônio do investidor"], correct: 1, why: "É VENDAS, não lucro. Vendeu até R$ 20k no mês = isento. Não vale pra day trade." },
+  { q: "Isenção de R$ 20.000 vale pra day trade?", opts: ["Sim, sempre","Não","Só se o lucro for pequeno","Só pra investidor pessoa física"], correct: 1, why: "Day trade nunca tem isenção. Sempre 20% sobre o lucro." },
+  { q: "Como funciona a compensação de prejuízos em ações?", opts: ["Day trade compensa à vista e vice-versa","À vista compensa só com à vista; day trade só com day trade","Só compensa no mesmo mês","Não pode compensar"], correct: 1, why: "Não cruza. À vista com à vista, day trade com day trade. Pode ser mesmo mês ou subsequentes." },
+  { q: "Prazo pra recolher IR sobre ganho em ações:", opts: ["Anual, na declaração","Último dia útil do mês subsequente ao mês de apuração","Até o dia 30 do mesmo mês","Até 90 dias após a operação"], correct: 1, why: "DARF até o último dia útil do mês seguinte. Investidor calcula sozinho." },
+  { q: "Quem calcula e recolhe o IR sobre ganho em ações?", opts: ["A corretora","A B3","O próprio investidor","A Receita Federal automaticamente"], correct: 2, why: "Investidor calcula e recolhe via DARF. Corretora só faz a retenção do dedo-duro (deduzido do devido)." },
+  { q: "Quantos cotistas, mínimo e máximo, em clube de investimento?", opts: ["5 a 100","3 a 50","10 a 30","2 a 150"], correct: 1, why: "Mínimo 3, máximo 50. Decorar." },
+  { q: "Concentração máxima de cotas por cotista em clube:", opts: ["20%","30%","40%","50%"], correct: 2, why: "40% máximo. Evita que vire veículo de uma pessoa só." },
+  { q: "Percentual mínimo do PL de clube em renda variável:", opts: ["51%","60%","67%","75%"], correct: 2, why: "67% em renda variável. Resto (até 33%) pode ir pra renda fixa." },
+  { q: "Quem tipicamente administra um clube de investimento?", opts: ["A CVM","Uma corretora","O Banco Central","O cotista majoritário"], correct: 1, why: "Corretora administra: registra o clube na B3, cobra taxa de administração." },
+  { q: "Quem pode gerir a carteira de um clube de investimento?", opts: ["Só profissional autorizado pela CVM","Qualquer cotista, livremente","Profissional autorizado pela CVM ou um cotista eleito em assembleia","Só o administrador"], correct: 2, why: "Pode ser profissional CVM OU cotista eleito. Mas cotista gestor não recebe remuneração e gere só 1 clube." },
+  { q: "Cotista gestor de clube pode receber remuneração?", opts: ["Sim, definida em assembleia","Não, é proibido por norma","Só se aprovado por 100% dos cotistas","Só após 1 ano de gestão"], correct: 1, why: "Proibido remunerar cotista gestor, direta ou indiretamente. Diferencial vs profissional contratado." },
+  { q: "Sobre dividendo na Lei das S.A.:", opts: ["Distribuição é facultativa","S.A. é obrigada; Estatuto define percentual mínimo e periodicidade","Só ON tem direito","Só pago anualmente"], correct: 1, why: "Obrigatório por lei. Estatuto define % mínimo e periodicidade (anual, semestral, trimestral)." },
+  { q: "Limite da dedução de JCP pra empresa:", opts: ["Sem limite","TJLP aplicada sobre o PL","SELIC sobre o lucro","CDI sobre o capital social"], correct: 1, why: "Limite = TJLP sobre as contas do PL. Acima disso, não é dedutível." },
+  { q: "Qual destes NÃO é provento?", opts: ["Dividendo","JCP","Bonificação","Corretagem"], correct: 3, why: "Corretagem é despesa cobrada pela corretora. Provento é o que o acionista RECEBE pela posse das ações." },
+  { q: "A Clearing da B3 é:", opts: ["Câmara de fiscalização da CVM","Câmara de custódia centralizada e liquidação das operações","Departamento jurídico da B3","Conselho de administração da B3"], correct: 1, why: "Clearing custodia ativos e liquida operações. Antes era a Câmara de Ações da BM&FBovespa." },
+  { q: "Por que dividendos são isentos pra PF no Brasil?", opts: ["Pra estimular bolsa","Porque o lucro já foi tributado na empresa via IRPJ/CSLL","Porque o STF assim decidiu","Porque a CVM determina"], correct: 1, why: "Isenção evita bitributação econômica. Lucro já pagou imposto na empresa antes de virar dividendo." },
+  { q: "IR retido na fonte (dedo-duro) é deduzido do imposto devido?", opts: ["Não, é cumulativo","Sim, abate do total a pagar via DARF","Só em day trade","Só pra grandes investidores"], correct: 1, why: "Retido na fonte (0,005% à vista, 1% day trade) é abatido. Função: dedo-duro pra Receita rastrear quem operou." },
+  { q: "Qual a diferença prática entre CTVM e DTVM hoje?", opts: ["CTVM opera em bolsa, DTVM só em balcão","DTVM só vende títulos públicos","Nenhuma diferença prática desde 2009","CTVM cobra menos"], correct: 2, why: "Equiparadas em 2009 (decisão Bacen + CVM). Ambas operam diretamente em bolsa." },
+  { q: "Spread bid-ask alto indica:", opts: ["Liquidez alta","Liquidez baixa, maior perda potencial em negociar","Volatilidade baixa","Boa governança"], correct: 1, why: "Spread alto = liquidez baixa. Quanto maior a diferença compra/venda, mais o investidor perde." },
+  { q: "Custódia de ações: as corretoras sempre cobram?", opts: ["Sim, é obrigatório","Não, muitas zeram como diferencial competitivo","Só pra clientes pequenos","Só em ações estrangeiras"], correct: 1, why: "Originalmente era repasse do custo da Clearing. Hoje muitas corretoras absorvem e zeram a custódia." },
+  { q: "Oferta pública de distribuição é regulada por:", opts: ["BACEN","CVM","Receita Federal","Tesouro Nacional"], correct: 1, why: "CVM regula ofertas públicas de valores mobiliários. Bacen regula instituições financeiras." },
+  { q: "O coordenador de uma oferta pública é:", opts: ["A CVM","Um banco de investimento ou corretora que estrutura e distribui a oferta","O Tesouro Nacional","O acionista controlador"], correct: 1, why: "Coordenador estrutura, faz bookbuilding, distribui. Geralmente banco de investimento ou corretora grande." },
+  { q: "Se o Estatuto for omisso sobre o dividendo obrigatório, a Lei das S.A. define:", opts: ["10% do lucro","25% do lucro","50% do lucro líquido ajustado","75% do lucro"], correct: 2, why: "Lei das S.A.: na omissão do Estatuto, dividendo obrigatório = 50% do lucro líquido ajustado." }
 ];
 
 const DIFICIL = [
-  { q: "Em um IPO secundário, a empresa recebe algum recurso?", a: "Não. Em oferta secundária só são vendidas ações já existentes por acionistas atuais. Os recursos vão pros vendedores, não pra empresa." },
-  { q: "Vendi R$ 25.000 em ações no mês e lucrei R$ 200. Quanto pago de IR?", a: "15% sobre R$ 200 = R$ 30. Como vendas passaram de R$ 20k, perde a isenção e o IR incide sobre TODO o lucro, não só sobre o que excedeu." },
-  { q: "Tive prejuízo de R$ 5.000 em day trade e ganho de R$ 8.000 no mercado à vista. Posso compensar?", a: "Não. Prejuízo de day trade só compensa ganho de day trade. Os R$ 8.000 do à vista são tributados normalmente, e os R$ 5.000 ficam de prejuízo acumulado pra futuros day trades." },
-  { q: "Quando incide o IR retido na fonte de 0,005% no mercado à vista?", a: "Quando as vendas no mês superam R$ 20.000. Incide sobre o volume vendido (não sobre o lucro). Função: ser dedo-duro pra Receita rastrear quem operou." },
-  { q: "Em day trade, o IR retido na fonte de 1% incide sobre o quê?", a: "Sobre o resultado positivo apurado no fechamento da operação. Se houve prejuízo no day trade, não há retenção." },
-  { q: "Bonificação tem entrada de caixa pro acionista?", a: "Em ações, não. O acionista recebe novas ações sem desembolsar nada, mas o preço unitário cai proporcionalmente. Existe bonificação em dinheiro, que é creditada em conta similar a um dividendo." },
-  { q: "Existe bonificação em dinheiro?", a: "Sim. O dinheiro é creditado na conta do investidor, de maneira semelhante a um dividendo." },
-  { q: "Diferença entre subscrição privada e pública?", a: "Privada: só os acionistas atuais participam, com direito de subscrição proporcional. Sobras podem ir a mercado. Pública: qualquer investidor pode subscrever (e quando é primeira emissão pública, vira IPO)." },
-  { q: "O direito de subscrição pode ser vendido?", a: "Sim. O acionista que recebe direito de subscrição pode exercer (comprar as novas ações) ou vender o direito a outro investidor." },
-  { q: "Após split 1:5, ação a R$ 100. Quanto fica?", a: "R$ 20. Quem tinha 1 ação passa a ter 5 ações a R$ 20. Patrimônio total inalterado: 1 × 100 = 5 × 20 = R$ 100." },
-  { q: "Após grupamento 10:1, ação a R$ 0,80. Quanto fica?", a: "R$ 8,00. Quem tinha 10 ações a R$ 0,80 passa a ter 1 ação a R$ 8,00. Patrimônio total inalterado: 10 × 0,80 = 1 × 8 = R$ 8." },
-  { q: "Acionista PN sempre não vota?", a: "Não. PN não vota em regra geral, mas há exceções legais previstas (ex: deixar de receber dividendos por 3 exercícios consecutivos pode dar direito a voto)." },
-  { q: "Em que ano CTVM e DTVM foram equiparadas?", a: "2009. Decisão conjunta do Banco Central e da CVM, a partir daí ambas operam diretamente em bolsa." },
-  { q: "Em uma falência, em que ordem PN recebe?", a: "Depois dos credores e antes dos ON. Acionistas (de qualquer tipo) só recebem se sobrar massa após pagar todos os credores. Entre os acionistas, PN tem prioridade sobre ON." },
-  { q: "Qual a relação mínima entre lucros e JCP a pagar?", a: "Lucros do período (antes da dedução do JCP) ou lucros acumulados/reservas devem ser iguais ou maiores que 2x o valor do JCP a ser pago." },
-  { q: "Cotista gestor pode gerir mais de um clube?", a: "Não. A norma proíbe expressamente. Se quiser gerir outro, precisa abrir mão do primeiro." },
-  { q: "Cotas de clube de investimento são negociadas em mercado?", a: "Não. As cotas não podem ser negociadas em bolsa. Saída do cotista é por resgate ou transferência conforme regulamento." },
-  { q: "Em IPO, por que se divulga uma faixa indicativa de preço, não um preço fixo?", a: "Porque o preço final é definido após o bookbuilding, ajustando à demanda real verificada pelos coordenadores no período de reserva." },
-  { q: "Em uma ordem limitada, se o preço final do IPO ultrapassar o limite, o que acontece?", a: "A operação não é fechada e nenhuma ação é alocada pro investidor. Por isso ordem limitada protege contra preço alto, mas pode resultar em zero alocação." },
-  { q: "Por que ON tem ganhado preferência sobre PN no Brasil em novos lançamentos?", a: "Padrão internacional prioriza ON. Novo Mercado da B3 só admite ON. Investidor institucional tende a preferir o direito de voto. PN ficou associada a governança mais fraca." },
-  { q: "O que é penny stock e qual a consequência de ser uma?", a: "Ação negociada abaixo de R$ 1,00. Não pode fazer parte do Índice Bovespa, perdendo visibilidade e atraindo menos liquidez. Empresa costuma fazer grupamento pra escapar." },
-  { q: "Cite 4 fontes típicas de risco específico de uma empresa.", a: "1. Dependência de poucos clientes. 2. Preço de matérias-primas. 3. Qualidade da gestão e política de crédito. 4. Concentração em poucos fornecedores. Outros: ações regulatórias setoriais, escândalos." },
-  { q: "Spread bid-ask alto indica o quê em termos de liquidez?", a: "Liquidez baixa. Quanto maior o spread, mais o investidor perde se precisar negociar (vende mais barato, compra mais caro do que o preço justo)." },
-  { q: "Quem é responsável por calcular e recolher o IR sobre ganho em ações?", a: "O próprio investidor. Calcula mensalmente, emite DARF e paga até o último dia útil do mês seguinte. Corretora só faz a retenção do dedo-duro (0,005% à vista, 1% day trade), que é deduzida do imposto devido." },
-  { q: "Além de ações, o que conta nos 67% mínimos em renda variável de um clube?", a: "Bônus e recibos de subscrição, debêntures conversíveis em ações de companhias abertas, cotas de fundos de índice (ETFs), certificados de depósito em ações." },
-  { q: "JCP é dedutível em qual regime tributário?", a: "Lucro real. Empresas no lucro presumido não conseguem se aproveitar da dedutibilidade do JCP." },
-  { q: "Custódia em ações, todas corretoras cobram?", a: "Não. Muitas corretoras zeram a taxa de custódia hoje. Originalmente é o repasse do custo da Clearing da B3, que algumas absorvem como diferencial competitivo." },
-  { q: "Qual o fato gerador do IR sobre ganho em ações?", a: "A apuração de lucro na venda. Só paga IR quem efetivamente vendeu e teve ganho, não há tributação sobre valorização não realizada." },
-  { q: "Bonificação altera a participação % do acionista na empresa?", a: "Não. Todos os acionistas recebem proporcionalmente, na mesma régua. A participação % de cada um permanece a mesma, só a quantidade total de ações aumenta." },
-  { q: "Day trade em ações tem a mesma alíquota de outros mercados (futuros, opções)?", a: "Sim. A alíquota de 20% sobre o lucro vale pra qualquer day trade no mercado financeiro, em ações, futuros, opções etc. A regra de compensação restrita também vale igualmente." },
-  { q: "Vendi R$ 18.000 em ações no mês com lucro de R$ 5.000. Quanto IR?", a: "Zero. Vendas totais no mês ficaram dentro da isenção de R$ 20.000, então o ganho é isento, mesmo que o lucro tenha sido alto." },
-  { q: "Fiz 50 day trades pequenos no mês com lucro total de R$ 800. Quanto pago de IR?", a: "20% sobre R$ 800 = R$ 160. Day trade não tem isenção, qualquer lucro é tributado a 20%." },
-  { q: "Empresa pagou JCP de R$ 1 milhão. Sou PF e tenho 1% das ações. Quanto recebo líquido?", a: "Bruto: R$ 10.000 (1% de R$ 1mi). Menos 15% de IR na fonte = R$ 1.500. Líquido: R$ 8.500." },
-  { q: "Em uma bonificação de 30%, ação cota a R$ 50. Qual o novo preço esperado teoricamente?", a: "≈ R$ 38,46. Cálculo: 50 / 1,30. Quem tinha 100 ações × R$ 50 = R$ 5.000 passa a ter 130 ações × R$ 38,46 ≈ R$ 5.000. Patrimônio inalterado." },
-  { q: "Cotista de um clube comprou cotas e ficou com 41% do total. O que acontece?", a: "Viola a regra de concentração máxima de 40%. O administrador deve resolver (recomprar/redistribuir) pra manter o limite. A regra existe pra evitar que clube vire veículo de uma pessoa só." },
-  { q: "Empresa quer abrir capital no Novo Mercado. Pode emitir ações PN?", a: "Não. Novo Mercado, segmento de governança superior da B3, só admite ações ON no capital social. Pra emitir PN tem que listar em outro segmento." },
-  { q: "Tive prejuízo de R$ 2.000 em day trade em janeiro. Em fevereiro, lucrei R$ 5.000 em day trade. Quanto IR pago em fevereiro?", a: "20% sobre R$ 3.000 (R$ 5.000 ganho menos R$ 2.000 prejuízo acumulado) = R$ 600. Prejuízo de day trade do mês anterior compensa o ganho de day trade do mês seguinte." },
-  { q: "Quem cobra emolumentos: corretora, B3 ou ambas?", a: "Apenas a B3. Emolumentos remuneram a bolsa pelo registro da operação. Corretagem é da corretora. Custódia pode ser da corretora/banco custodiante." },
-  { q: "Investidor X comprou ação a R$ 30 e vendeu a R$ 50, com R$ 1 de custos. Lucro tributável?", a: "R$ 19 por ação (50 − 30 − 1). Custos de aquisição (corretagem, emolumentos) são dedutíveis na apuração do ganho. IR de 15% incide sobre R$ 19, ou seja R$ 2,85 por ação." },
-  { q: "Em IPO, faixa indicativa R$ 16 a R$ 20. Investidor coloca ordem limitada a R$ 17. Preço final sai R$ 18. O que acontece?", a: "Investidor não recebe nenhuma ação. Como o preço final (R$ 18) ficou acima do limite (R$ 17), a corretora não fecha o negócio. Pra garantir compra teria que ter usado ordem a mercado." }
+  { q: "Em IPO secundário, a empresa recebe algum recurso?", opts: ["Sim, integral","Sim, parcialmente","Não, recursos vão pros acionistas vendedores","Só após o período de reserva"], correct: 2, why: "Secundária = ações já existentes vendidas por acionistas atuais. Empresa não vê os recursos." },
+  { q: "Vendi R$ 25.000 em ações no mês e lucrei R$ 200. Quanto pago de IR?", opts: ["Zero (isenção)","R$ 30 (15% sobre R$ 200)","R$ 750 (15% sobre R$ 5.000 que excedeu)","R$ 40 (20% sobre R$ 200)"], correct: 1, why: "Vendas > R$ 20k = perde isenção. IR de 15% sobre TODO o lucro (R$ 200), não só o excedente." },
+  { q: "Tive prejuízo de R$ 5.000 em day trade e ganho de R$ 8.000 no à vista. Posso compensar?", opts: ["Sim, integralmente","Não, day trade só compensa com day trade","Sim, mas só 50%","Sim, mas no mesmo mês apenas"], correct: 1, why: "Não cruza. Os R$ 8k do à vista pagam 15% normais. Os R$ 5k de prejuízo ficam acumulados pra futuros day trades." },
+  { q: "Quando incide o IR retido na fonte de 0,005% no à vista?", opts: ["Sempre, em qualquer venda","Quando vendas no mês > R$ 20.000, sobre o volume vendido","Sobre o lucro acima de R$ 20.000","Só em day trade"], correct: 1, why: "0,005% sobre VOLUME vendido (não lucro), quando vendas mensais > R$ 20k. Função: dedo-duro." },
+  { q: "Em day trade, o IR retido na fonte de 1% incide sobre:", opts: ["O volume negociado","O resultado positivo apurado no fechamento","O patrimônio do investidor","Sobre cada operação isoladamente"], correct: 1, why: "1% sobre o resultado POSITIVO apurado. Se day trade deu prejuízo, não há retenção." },
+  { q: "Bonificação em ações tem entrada de caixa pro acionista?", opts: ["Sim, sempre","Não, recebe ações novas; o preço unitário cai proporcionalmente","Sim, mas só pra PN","Sim, equivale a dividendo"], correct: 1, why: "Em ações = sem caixa. Existe bonificação em DINHEIRO (similar a dividendo), mas a clássica é em ações." },
+  { q: "Existe bonificação em dinheiro?", opts: ["Não, só em ações","Sim, creditada em conta similar a dividendo","Sim, mas só pra PN","Sim, mas é proibida pela CVM"], correct: 1, why: "Sim. Dinheiro creditado na conta do investidor de modo semelhante a um dividendo." },
+  { q: "Diferença entre subscrição privada e pública?", opts: ["Privada é só PJ, pública é só PF","Privada: só acionistas atuais; pública: qualquer investidor (e quando primeira pública = IPO)","Privada paga mais imposto","Privada não tem direito de preferência"], correct: 1, why: "Privada = direito de preferência dos atuais. Sobras vão a mercado. Pública = qualquer um, e a primeira pública vira IPO." },
+  { q: "O direito de subscrição pode ser vendido?", opts: ["Não, é intransferível","Sim, acionista pode exercer ou vender o direito","Só se aprovado em assembleia","Só pra outro acionista da empresa"], correct: 1, why: "Direito de subscrição é negociável. Acionista que não quer exercer pode vender pra outro investidor." },
+  { q: "Após split 1:5, ação a R$ 100. Quanto fica?", opts: ["R$ 5","R$ 20","R$ 25","R$ 100 (não muda)"], correct: 1, why: "100 / 5 = R$ 20. Quem tinha 1 ação a R$ 100 passa a ter 5 a R$ 20. Patrimônio inalterado." },
+  { q: "Após grupamento 10:1, ação a R$ 0,80. Quanto fica?", opts: ["R$ 0,08","R$ 1,00","R$ 8,00","R$ 80,00"], correct: 2, why: "0,80 × 10 = R$ 8. Quem tinha 10 ações a R$ 0,80 passa a ter 1 a R$ 8. Patrimônio inalterado." },
+  { q: "Acionista PN sempre não tem direito a voto?", opts: ["Sim, sempre","Não, há exceções legais (ex: 3 anos sem dividendo)","Só em assembleia ordinária","Só com aprovação de 2/3"], correct: 1, why: "PN normalmente não vota, mas há exceções. Ex: deixar de receber dividendo por 3 exercícios consecutivos pode dar voto." },
+  { q: "CTVM e DTVM foram equiparadas em qual ano?", opts: ["1998","2002","2009","2017"], correct: 2, why: "2009. Decisão conjunta Bacen + CVM, ambas passaram a operar diretamente em bolsa." },
+  { q: "Em uma falência, quando o acionista PN recebe?", opts: ["Antes dos credores","Depois dos credores e antes dos ON","Junto com ON","Só após pagamento dos impostos federais"], correct: 1, why: "Acionista (qualquer tipo) só recebe se sobrar massa após credores. Entre acionistas, PN tem prioridade sobre ON." },
+  { q: "Qual a relação mínima entre lucros e JCP a pagar?", opts: ["Igual ou maior que o JCP","Igual ou maior que 2x o JCP","Igual ou maior que 50% do JCP","Sem relação obrigatória"], correct: 1, why: "Lucros do período (antes da dedução) ou acumulados ≥ 2× JCP a pagar. Senão, não pode distribuir JCP." },
+  { q: "Cotista gestor pode gerir mais de um clube?", opts: ["Sim, sem limite","Sim, até 3","Não, apenas um","Sim, se for da mesma família"], correct: 2, why: "Norma proíbe expressamente. Se quiser gerir outro, precisa abrir mão do primeiro." },
+  { q: "Cotas de clube de investimento são negociadas em mercado?", opts: ["Sim, em bolsa","Sim, em mercado de balcão","Não, saída só por resgate ou transferência","Só após 1 ano"], correct: 2, why: "Cotas de clube não são negociadas em bolsa nem balcão. Saída por resgate ou transferência conforme regulamento." },
+  { q: "Em IPO, por que se divulga faixa indicativa de preço, não preço fixo?", opts: ["Pra dar margem ao coordenador lucrar","Pra ajustar via bookbuilding conforme demanda real","Por exigência da CVM","Pra evitar concorrência entre corretoras"], correct: 1, why: "Faixa indicativa permite calibrar preço final via bookbuilding, baseado no interesse manifestado no período de reserva." },
+  { q: "Em ordem limitada, se preço final do IPO ultrapassar o limite, o que acontece?", opts: ["Compra parcial","Compra ao preço limite","Negócio não é fechado, zero alocação","Cobra multa do investidor"], correct: 2, why: "Ordem limitada não fecha se preço > limite. Por isso protege contra preço alto, mas pode resultar em zero alocação." },
+  { q: "Por que ON tem ganhado preferência sobre PN no Brasil?", opts: ["Tributação mais baixa","Padrão internacional, Novo Mercado só ON, governança melhor percebida","Lei mudou em 2010","CVM proibiu novas PN"], correct: 1, why: "Padrão global prioriza ON. Novo Mercado só admite ON. Institucional prefere voto. PN ficou associada a governança fraca." },
+  { q: "Penny stock é definido como ação:", opts: ["De empresa pequena","Negociada abaixo de R$ 1, excluída do Ibovespa","Que paga pouco dividendo","Sem liquidez"], correct: 1, why: "Penny stock = ação < R$ 1. Pela regra da B3, excluída do Ibovespa. Empresa faz grupamento pra escapar." },
+  { q: "Quais NÃO é fonte típica de risco específico de uma empresa?", opts: ["Dependência de poucos clientes","Preço de matérias-primas","Crise macroeconômica global","Qualidade da gestão"], correct: 2, why: "Crise macro = risco SISTEMÁTICO (de mercado). Os outros são específicos da empresa." },
+  { q: "Quem é responsável por calcular e recolher o IR sobre ganho em ações?", opts: ["A corretora, automaticamente","A B3","O próprio investidor, via DARF","A Receita Federal"], correct: 2, why: "Investidor calcula sozinho mensalmente, emite DARF e paga até último dia útil do mês seguinte." },
+  { q: "Além de ações, o que conta nos 67% mínimos em RV de um clube?", opts: ["Só ações","Bônus de subscrição, debêntures conversíveis em ações, ETFs, certificados de depósito em ações","Títulos públicos","Renda fixa bancária"], correct: 1, why: "Os 67% incluem ações + instrumentos com exposição ao risco de ações: bônus subscrição, debêntures conversíveis, ETFs, BDRs." },
+  { q: "JCP é dedutível em qual regime tributário?", opts: ["Lucro real","Lucro presumido","Simples Nacional","Em qualquer regime"], correct: 0, why: "Só lucro real permite dedução de JCP. No presumido, não há benefício fiscal de distribuir JCP." },
+  { q: "Qual o fato gerador do IR sobre ganho em ações?", opts: ["A compra da ação","A apuração de lucro na venda","O recebimento de dividendos","A passagem de ano fiscal"], correct: 1, why: "Fato gerador = lucro apurado na venda. Não há tributação sobre valorização não realizada (mark-to-market)." },
+  { q: "Bonificação altera a participação % do acionista?", opts: ["Sim, aumenta","Sim, diminui","Não, todos recebem proporcionalmente","Depende do tipo de ação"], correct: 2, why: "Todos recebem na mesma proporção. % de cada um inalterado, só aumenta a quantidade total de ações." },
+  { q: "Day trade em ações tem mesma alíquota de outros mercados (futuros, opções)?", opts: ["Não, ações é menor","Sim, 20% sobre o lucro vale igual em todos","Não, ações é maior","Depende do volume"], correct: 1, why: "20% pra qualquer day trade. Regras de compensação restrita também valem igualmente entre os mercados." },
+  { q: "Vendi R$ 18.000 em ações no mês com lucro de R$ 5.000. Quanto IR?", opts: ["Zero (vendas dentro da isenção)","R$ 750 (15% sobre R$ 5.000)","R$ 1.000 (20%)","R$ 300 (15% sobre lucro acima de R$ 4.000)"], correct: 0, why: "Vendas mensais ≤ R$ 20.000 = isento, mesmo com lucro alto. Isenção é sobre vendas, não sobre lucro." },
+  { q: "Fiz 50 day trades pequenos no mês, lucro total R$ 800. IR?", opts: ["Zero (lucro abaixo da isenção)","R$ 120 (15%)","R$ 160 (20%)","R$ 80 (10%)"], correct: 2, why: "Day trade = 20% sobre lucro, sem isenção. R$ 800 × 20% = R$ 160." },
+  { q: "Empresa pagou JCP de R$ 1mi, sou PF e tenho 1% das ações. Líquido?", opts: ["R$ 10.000","R$ 8.500","R$ 9.500","R$ 7.750"], correct: 1, why: "Bruto: 1% × 1mi = R$ 10.000. Menos 15% IR = R$ 1.500. Líquido: R$ 8.500." },
+  { q: "Bonificação 30%, ação a R$ 50. Novo preço esperado teoricamente?", opts: ["R$ 50 (não muda)","R$ 35,00","R$ 38,46","R$ 65,00"], correct: 2, why: "50 / 1,30 ≈ R$ 38,46. Quem tinha 100 ações × R$ 50 = R$ 5.000 passa a ter 130 × R$ 38,46 ≈ R$ 5.000." },
+  { q: "Cotista de clube ficou com 41% das cotas. O que acontece?", opts: ["Tudo bem, é só monitorar","Viola limite de 40%; admin precisa ajustar","Vira controlador","Recebe rendimento extra"], correct: 1, why: "Concentração máxima é 40%. Administrador deve resolver (recompra/redistribuição) pra manter o limite." },
+  { q: "Empresa quer abrir capital no Novo Mercado. Pode emitir PN?", opts: ["Sim, sem restrições","Sim, mas mínimo 50% ON","Não, Novo Mercado só admite ON","Sim, só nos primeiros 3 anos"], correct: 2, why: "Novo Mercado é segmento de governança superior. Só admite ON. Pra emitir PN, lista em outro segmento." },
+  { q: "Day trade prejuízo R$ 2k em janeiro, lucro R$ 5k em fevereiro (day trade). IR de fevereiro?", opts: ["R$ 1.000 (20% sobre R$ 5k)","R$ 600 (20% sobre R$ 3k, líquido)","Zero (compensa)","R$ 750 (15%)"], correct: 1, why: "Compensa: R$ 5k − R$ 2k = R$ 3k tributáveis. 20% × R$ 3.000 = R$ 600. Day trade compensa day trade entre meses." },
+  { q: "Investidor X comprou ação a R$ 30 e vendeu a R$ 50, custos R$ 1. Lucro tributável por ação?", opts: ["R$ 20","R$ 19","R$ 50","R$ 30"], correct: 1, why: "Lucro = 50 − 30 − 1 = R$ 19 por ação. Custos (corretagem, emolumentos) são dedutíveis. IR de 15% incide sobre R$ 19." },
+  { q: "IPO faixa R$ 16-20. Investidor coloca ordem limitada R$ 17. Preço final sai R$ 18. Resultado?", opts: ["Compra a R$ 17","Compra a R$ 18","Não recebe nenhuma ação","Compra com rateio"], correct: 2, why: "Preço final (R$ 18) > limite (R$ 17), corretora não fecha. Zero alocação. Pra garantir compra, ordem a mercado." },
+  { q: "Corretagem, custódia, emolumentos: qual é cobrada pela B3?", opts: ["Corretagem","Custódia","Emolumentos","Todas pela B3"], correct: 2, why: "Emolumentos = receita da B3. Corretagem é da corretora. Custódia pode ser da corretora/banco custodiante." },
+  { q: "Qual destes investimentos NÃO conta nos 67% mínimos em RV de clube?", opts: ["Ações","ETFs","Debêntures conversíveis em ações","Títulos públicos federais"], correct: 3, why: "Títulos públicos federais entram nos 33% restantes (renda fixa). Os 67% são ações e instrumentos com exposição a risco de ações." },
+  { q: "S.A. com Estatuto omisso sobre dividendo obrigatório. A lei garante mínimo de:", opts: ["10% do lucro","25% do lucro","50% do lucro líquido ajustado","100% do lucro"], correct: 2, why: "Na omissão do Estatuto, Lei das S.A. define dividendo mínimo de 50% do lucro líquido ajustado." }
 ];
 
 // ---- App state ----
 let activeLevel = null;
 let order = [];
 let current = 0;
-let stats = { sabia: 0, naoSabia: 0 };
+let score = 0;
 let wrong = [];
 
 const screen = document.getElementById('screen');
@@ -476,28 +366,28 @@ function renderIntro() {
   progressWrap.style.display = 'none';
   screen.innerHTML = `
     <div class="intro">
-      <h1>Flashcards · Renda Variável</h1>
-      <p>Treino de memorização. Lê a pergunta, pensa na resposta, vira o card pra conferir. Marca se sabia ou não. No fim, revisa o que errou.</p>
+      <h1>Quiz · Renda Variável</h1>
+      <p>Múltipla escolha com feedback imediato. Questões e alternativas embaralhadas a cada rodada. Escolha o nível pra começar.</p>
       <div class="level-grid">
         <button class="level-card facil" onclick="startLevel('facil')">
           <div class="lvl-name">Fácil</div>
-          <div class="lvl-desc">Definições e identificação. ON, PN, dígitos da B3, conceitos básicos.</div>
-          <div class="lvl-count">${FACIL.length} cards</div>
+          <div class="lvl-desc">Definições e identificação. ON, PN, dígitos da B3, conceitos base.</div>
+          <div class="lvl-count">${FACIL.length} questões</div>
         </button>
         <button class="level-card medio" onclick="startLevel('medio')">
           <div class="lvl-name">Médio</div>
-          <div class="lvl-desc">Mecânica e regras com números. Tributação, IPO, eventos societários, clube.</div>
-          <div class="lvl-count">${MEDIO.length} cards</div>
+          <div class="lvl-desc">Mecânica e regras com números. Tributação, IPO, eventos societários.</div>
+          <div class="lvl-count">${MEDIO.length} questões</div>
         </button>
         <button class="level-card dificil" onclick="startLevel('dificil')">
           <div class="lvl-name">Difícil</div>
           <div class="lvl-desc">Pegadinhas, casos limite e cálculos. Os que mais caem em prova.</div>
-          <div class="lvl-count">${DIFICIL.length} cards</div>
+          <div class="lvl-count">${DIFICIL.length} questões</div>
         </button>
         <button class="level-card misturado" onclick="startLevel('misturado')">
           <div class="lvl-name">Misturado</div>
-          <div class="lvl-desc">Embaralha cards de todos os níveis. Modo prova: sem aviso de dificuldade.</div>
-          <div class="lvl-count">40 cards aleatórios</div>
+          <div class="lvl-desc">40 aleatórios entre os 120. Modo prova: sem aviso de dificuldade.</div>
+          <div class="lvl-count">40 questões aleatórias</div>
         </button>
       </div>
     </div>
@@ -516,124 +406,111 @@ function startLevel(level) {
   }
   order = shuffle(pool);
   current = 0;
-  stats = { sabia: 0, naoSabia: 0 };
+  score = 0;
   wrong = [];
   progressWrap.style.display = 'block';
   updatePills();
-  renderCard();
+  renderQuestion();
 }
 
 function updatePills() {
   const labels = { facil: 'Fácil', medio: 'Médio', dificil: 'Difícil', misturado: 'Misturado' };
   metaPills.innerHTML = `
     <span class="pill level ${activeLevel}">${labels[activeLevel]}</span>
-    <span class="pill"><strong>${current + 1}</strong> / ${order.length}</span>
-    <span class="pill"><strong style="color:var(--good)">${stats.sabia}</strong> sabia</span>
-    <span class="pill"><strong style="color:var(--bad)">${stats.naoSabia}</strong> não sabia</span>
+    <span class="pill"><strong>${score}</strong> / ${order.length}</span>
   `;
 }
 
-function renderCard() {
-  const card = order[current];
+function renderQuestion() {
+  const q = order[current];
+  const optMap = q.opts.map((text, idx) => ({ text, isCorrect: idx === q.correct }));
+  const shuffled = shuffle(optMap);
+  const correctAfterShuffle = shuffled.findIndex(o => o.isCorrect);
+
   progressFill.style.width = `${(current / order.length) * 100}%`;
   updatePills();
 
+  const letters = ['A','B','C','D'];
   screen.innerHTML = `
-    <div class="card-stage">
-      <div class="flashcard" id="flash" onclick="flipCard()">
-        <div class="face front">
-          <div class="label">Pergunta · ${current + 1} de ${order.length}</div>
-          <div class="question">${card.q}</div>
-          <div class="hint">Clique no card pra ver a resposta</div>
-        </div>
-        <div class="face back">
-          <div class="label">Resposta</div>
-          <div class="answer">${card.a}</div>
-          <div class="hint">Clique pra voltar</div>
-        </div>
+    <div class="card">
+      <div class="qmeta">Questão ${current + 1} de ${order.length}</div>
+      <div class="qtext">${q.q}</div>
+      <div class="options" id="opts">
+        ${shuffled.map((o, i) => `
+          <button class="opt" data-i="${i}">
+            <span class="letter">${letters[i]}</span>
+            <span>${o.text}</span>
+          </button>
+        `).join('')}
       </div>
-    </div>
-    <div class="rating-label" id="ratingLabel" style="display:none">Sabia essa?</div>
-    <div class="self-rating" id="selfRating">
-      <button class="btn bad" onclick="markCard(false)">Não sabia</button>
-      <button class="btn good" onclick="markCard(true)">Sabia</button>
-    </div>
-    <div class="controls">
-      <div class="left">
-        <button class="btn ghost" onclick="renderIntro()">Voltar</button>
-      </div>
-      <div class="right">
-        <button class="btn ghost" onclick="prevCard()" ${current === 0 ? 'disabled' : ''}>Anterior</button>
-        <button class="btn" onclick="skipCard()">Pular</button>
-      </div>
+      <div class="explain" id="explain"></div>
+      <div class="actions" id="actions"></div>
     </div>
   `;
+
+  document.querySelectorAll('.opt').forEach(btn => {
+    btn.addEventListener('click', () => handleAnswer(parseInt(btn.dataset.i), correctAfterShuffle, shuffled, q));
+  });
 }
 
-function flipCard() {
-  const f = document.getElementById('flash');
-  f.classList.toggle('flipped');
-  if (f.classList.contains('flipped')) {
-    document.getElementById('selfRating').classList.add('show');
-    document.getElementById('ratingLabel').style.display = 'block';
-  }
+function handleAnswer(picked, correctIdx, shuffled, q) {
+  document.querySelectorAll('.opt').forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === correctIdx) btn.classList.add('correct');
+    if (i === picked && picked !== correctIdx) btn.classList.add('wrong');
+  });
+
+  const isRight = picked === correctIdx;
+  if (isRight) score++;
+  else wrong.push({ q: q.q, picked: shuffled[picked].text, correct: q.opts[q.correct], why: q.why });
+
+  updatePills();
+
+  const explain = document.getElementById('explain');
+  explain.innerHTML = `<b>${isRight ? 'Certo.' : 'Errado.'}</b> ${q.why}`;
+  explain.classList.add('show');
+
+  const actions = document.getElementById('actions');
+  const isLast = current === order.length - 1;
+  actions.innerHTML = `<button class="btn" onclick="nextQuestion()">${isLast ? 'Ver resultado' : 'Próxima'}</button>`;
 }
 
-function markCard(knew) {
-  const card = order[current];
-  if (knew) stats.sabia++;
-  else { stats.naoSabia++; wrong.push(card); }
-  nextCard();
-}
-
-function skipCard() { nextCard(); }
-
-function nextCard() {
+function nextQuestion() {
   current++;
-  if (current >= order.length) {
-    renderFinal();
-  } else {
-    renderCard();
-  }
-}
-
-function prevCard() {
-  if (current > 0) {
-    current--;
-    renderCard();
-  }
+  if (current >= order.length) renderFinal();
+  else renderQuestion();
 }
 
 function renderFinal() {
   progressFill.style.width = '100%';
-  const total = stats.sabia + stats.naoSabia;
-  const pct = total > 0 ? Math.round((stats.sabia / total) * 100) : 0;
+  const pct = Math.round((score / order.length) * 100);
   let comment = '';
-  if (pct === 100 && total >= order.length) comment = 'Cartão limpo. Próximo nível.';
-  else if (pct >= 85) comment = 'Forte. Revisa só os que escaparam.';
-  else if (pct >= 70) comment = 'Decente. Roda o nível de novo focando nos errados.';
-  else if (pct >= 50) comment = 'Tem buracos. Volta pro resumo antes da próxima rodada.';
-  else comment = 'Lê o resumo de novo. Sério.';
+  if (pct === 100) comment = 'Perfeito. Vai dominar o gameshow.';
+  else if (pct >= 85) comment = 'Forte. Revisa só os pontos específicos.';
+  else if (pct >= 70) comment = 'OK, mas tem espaço pra melhorar antes do quiz.';
+  else if (pct >= 50) comment = 'Volta pro resumo antes da próxima rodada.';
+  else comment = 'Volta pro resumo. Sério.';
 
   const reviewHtml = wrong.length > 0 ? `
     <div class="review">
-      <h3>Cards pra revisar (${wrong.length})</h3>
+      <h3>Revisar erros (${wrong.length})</h3>
       ${wrong.map(w => `
         <div class="review-item">
           <div class="q">${w.q}</div>
-          <div class="a">${w.a}</div>
+          <div class="a">Você: "${w.picked}"</div>
+          <div class="a"><b>Correto:</b> "${w.correct}"</div>
+          <div class="a" style="margin-top:6px">${w.why}</div>
         </div>
       `).join('')}
     </div>
-  ` : `<div class="review"><h3>Sem cards pra revisar.</h3></div>`;
+  ` : `<div class="review"><h3>Sem erros pra revisar.</h3></div>`;
 
   screen.innerHTML = `
     <div class="final">
       <div class="ring" style="--p:${pct}"><div class="pct">${pct}%</div></div>
-      <h2>${stats.sabia} de ${order.length} acertos</h2>
+      <h2>${score} de ${order.length} acertos</h2>
       <p class="sub">${comment}</p>
-      <div style="display:flex; gap:10px; justify-content:center; flex-wrap: wrap;">
-        ${wrong.length > 0 ? `<button class="btn" onclick="reviewWrong()">Repetir só os errados</button>` : ''}
+      <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
         <button class="btn" onclick="startLevel(activeLevel)">Refazer nível</button>
         <button class="btn ghost" onclick="renderIntro()">Tela inicial</button>
       </div>
@@ -641,35 +518,6 @@ function renderFinal() {
     </div>
   `;
 }
-
-function reviewWrong() {
-  if (wrong.length === 0) return;
-  order = shuffle(wrong);
-  current = 0;
-  stats = { sabia: 0, naoSabia: 0 };
-  wrong = [];
-  updatePills();
-  renderCard();
-}
-
-document.addEventListener('keydown', (e) => {
-  if (!order.length || current >= order.length) return;
-  if (e.key === ' ' || e.key === 'Enter') {
-    e.preventDefault();
-    const f = document.getElementById('flash');
-    if (f && !f.classList.contains('flipped')) flipCard();
-  }
-  if (e.key === 'ArrowRight') skipCard();
-  if (e.key === 'ArrowLeft') prevCard();
-  if (e.key === '1') {
-    const f = document.getElementById('flash');
-    if (f && f.classList.contains('flipped')) markCard(false);
-  }
-  if (e.key === '2') {
-    const f = document.getElementById('flash');
-    if (f && f.classList.contains('flipped')) markCard(true);
-  }
-});
 
 renderIntro();
 </script>
