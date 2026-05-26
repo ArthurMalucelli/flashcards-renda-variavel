@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quiz CPA-10 Cap 6 — Renda Variável</title>
+<title>Quiz CPA-10 — Renda Variável & Fundos</title>
 <style>
   :root {
     --bg-0: #0a0e1a;
@@ -11,6 +11,7 @@
     --bg-2: #1a2140;
     --accent: #5fffd1;
     --accent-2: #7c5cff;
+    --accent-3: #ffb547;
     --good: #3ddc84;
     --bad: #ff4d6d;
     --warn: #ffb547;
@@ -38,6 +39,7 @@
     display: flex; align-items: center; gap: 12px;
     font-weight: 600; letter-spacing: 0.3px; font-size: 13px;
     color: var(--muted); text-transform: uppercase;
+    cursor: pointer;
   }
   .brand .dot {
     width: 10px; height: 10px; border-radius: 50%;
@@ -56,6 +58,8 @@
   .pill.level.medio { color: var(--warn); border-color: rgba(255, 181, 71, 0.3); }
   .pill.level.dificil { color: var(--bad); border-color: rgba(255, 77, 109, 0.3); }
   .pill.level.misturado { color: var(--accent-2); border-color: rgba(124, 92, 255, 0.3); }
+  .pill.game { background: rgba(124, 92, 255, 0.12); color: var(--accent-2); border-color: rgba(124, 92, 255, 0.35); }
+  .pill.game.fundos { background: rgba(255, 181, 71, 0.12); color: var(--accent-3); border-color: rgba(255, 181, 71, 0.35); }
 
   .progress {
     height: 4px; width: 100%;
@@ -74,11 +78,7 @@
     box-shadow: 0 24px 60px rgba(0,0,0,0.35);
   }
 
-  .qmeta {
-    font-size: 11px; text-transform: uppercase;
-    letter-spacing: 1.4px; color: var(--muted);
-    margin-bottom: 12px;
-  }
+  .qmeta { font-size: 11px; text-transform: uppercase; letter-spacing: 1.4px; color: var(--muted); margin-bottom: 12px; }
   .qtext { font-size: 21px; line-height: 1.45; font-weight: 500; margin-bottom: 24px; }
 
   .options { display: flex; flex-direction: column; gap: 10px; }
@@ -126,21 +126,50 @@
   button.btn:hover { transform: translateY(-1px); }
   button.btn.ghost { background: transparent; color: var(--muted); border: 1px solid var(--line); }
 
-  /* Intro */
+  /* Intro / Game selector */
   .intro {
     text-align: center; padding: 50px 28px;
     background: var(--bg-1); border: 1px solid var(--line);
     border-radius: 18px;
   }
   .intro h1 {
-    font-size: 30px; margin: 0 0 8px;
+    font-size: 32px; margin: 0 0 8px;
     background: linear-gradient(135deg, var(--accent), var(--accent-2));
     -webkit-background-clip: text; background-clip: text; color: transparent;
   }
   .intro p {
     color: var(--muted); font-size: 14px; line-height: 1.6;
-    max-width: 460px; margin: 0 auto 32px;
+    max-width: 480px; margin: 0 auto 32px;
   }
+
+  .game-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 16px; margin-top: 28px; text-align: left;
+  }
+  .game-card {
+    background: var(--bg-2); border: 1px solid var(--line);
+    border-radius: 16px; padding: 28px 24px;
+    cursor: pointer; transition: all 180ms ease;
+    color: var(--text); font-family: inherit; text-align: left;
+    position: relative; overflow: hidden;
+  }
+  .game-card::before {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(135deg, transparent 50%, rgba(95, 255, 209, 0.04));
+    pointer-events: none;
+  }
+  .game-card.fundos::before {
+    background: linear-gradient(135deg, transparent 50%, rgba(255, 181, 71, 0.05));
+  }
+  .game-card:hover { transform: translateY(-3px); border-color: var(--accent); }
+  .game-card.fundos:hover { border-color: var(--accent-3); }
+  .game-card .gc-tag { font-size: 11px; text-transform: uppercase; letter-spacing: 1.4px; color: var(--accent); font-weight: 600; margin-bottom: 8px; }
+  .game-card.fundos .gc-tag { color: var(--accent-3); }
+  .game-card .gc-name { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+  .game-card .gc-desc { font-size: 13px; color: var(--muted); line-height: 1.5; margin-bottom: 14px; }
+  .game-card .gc-stats { display: flex; gap: 18px; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
+  .game-card .gc-stats strong { color: var(--text); font-size: 14px; display: block; }
+
   .level-grid {
     display: grid; grid-template-columns: repeat(2, 1fr);
     gap: 14px; margin-top: 28px; text-align: left;
@@ -159,6 +188,10 @@
   .level-card.medio { border-left: 3px solid var(--warn); }
   .level-card.dificil { border-left: 3px solid var(--bad); }
   .level-card.misturado { border-left: 3px solid var(--accent-2); }
+
+  .back-bar {
+    display: flex; justify-content: flex-start; margin-bottom: 18px;
+  }
 
   /* Final */
   .final { text-align: center; padding: 50px 28px; background: var(--bg-1); border: 1px solid var(--line); border-radius: 18px; }
@@ -188,7 +221,7 @@
   @media (max-width: 600px) {
     .qtext { font-size: 18px; }
     .card { padding: 24px 20px; }
-    .level-grid { grid-template-columns: 1fr; }
+    .level-grid, .game-grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -196,7 +229,7 @@
 <div class="app">
 
 <header>
-  <div class="brand"><span class="dot"></span> Quiz · Renda Variável</div>
+  <div class="brand" onclick="renderGameSelect()"><span class="dot"></span> Quiz CPA-10 · ANBIMA</div>
   <div class="meta-pills" id="metaPills"></div>
 </header>
 
@@ -206,12 +239,15 @@
 
 <div id="screen"></div>
 
-<div class="footer">CPA-10 ANBIMA · Cap 6.1 Ações · 120 questões</div>
+<div class="footer">CPA-10 ANBIMA · Cap 5 Fundos & Cap 6 Renda Variável · 240 questões</div>
 
 </div>
 
 <script>
-const FACIL = [
+// ============================================================
+//  BANCO RENDA VARIÁVEL (CAP 6)
+// ============================================================
+const RV_FACIL = [
   { q: "O que é uma ação?", opts: ["Um título de dívida emitido pela empresa","Fração ideal do capital social de uma S.A.","Um contrato de derivativos","Cota de fundo de investimento"], correct: 1, why: "Ação representa uma fração do capital social. Quem detém é sócio, com exposição a upside e downside." },
   { q: "Qual a principal diferença entre renda fixa e renda variável?", opts: ["Renda fixa tem prazo, renda variável não","Renda fixa = promessa de pagamento (dívida); renda variável = participação no capital","Renda fixa é tributada, renda variável é isenta","Renda fixa é sempre rentável, renda variável dá prejuízo"], correct: 1, why: "Renda fixa = dívida/capital de terceiros. Renda variável = participação no capital próprio." },
   { q: "ON significa:", opts: ["Operação Negociada","Ação Ordinária Nominativa","Oferta Negocial","Obrigação Negociável"], correct: 1, why: "ON = Ordinária Nominativa. Toda ação no Brasil é nominativa." },
@@ -254,7 +290,7 @@ const FACIL = [
   { q: "Cotista é:", opts: ["Quem trabalha em corretora","Pessoa que detém cotas de fundo ou clube de investimento","Acionista controlador","Auditor da CVM"], correct: 1, why: "Cotista = dono de cotas. Equivalente a acionista, mas em fundo/clube em vez de S.A." }
 ];
 
-const MEDIO = [
+const RV_MEDIO = [
   { q: "Qual segmento da B3 só admite ações ordinárias?", opts: ["Bovespa Mais","Nível 1","Nível 2","Novo Mercado"], correct: 3, why: "Novo Mercado, padrão de governança superior desde 2000. Só ON, alinhado a padrão internacional." },
   { q: "O que ocorre quando a demanda em IPO supera a oferta?", opts: ["O IPO é cancelado","Sobredemanda: gera rateio proporcional aos pedidos","O preço aumenta automaticamente","Apenas institucionais recebem"], correct: 1, why: "Sobredemanda gera rateio. Cada investidor recebe parte proporcional ao que pediu na reserva." },
   { q: "Em uma ordem LIMITADA num IPO, o investidor:", opts: ["Aceita qualquer preço final","Define o preço máximo que aceita pagar","Compra apenas se houver rateio","Cancela automaticamente após período de reserva"], correct: 1, why: "Limitada protege contra preço alto. Se preço final > limite, não compra. Ordem a mercado é o oposto." },
@@ -297,7 +333,7 @@ const MEDIO = [
   { q: "Se o Estatuto for omisso sobre o dividendo obrigatório, a Lei das S.A. define:", opts: ["10% do lucro","25% do lucro","50% do lucro líquido ajustado","75% do lucro"], correct: 2, why: "Lei das S.A.: na omissão do Estatuto, dividendo obrigatório = 50% do lucro líquido ajustado." }
 ];
 
-const DIFICIL = [
+const RV_DIFICIL = [
   { q: "Em IPO secundário, a empresa recebe algum recurso?", opts: ["Sim, integral","Sim, parcialmente","Não, recursos vão pros acionistas vendedores","Só após o período de reserva"], correct: 2, why: "Secundária = ações já existentes vendidas por acionistas atuais. Empresa não vê os recursos." },
   { q: "Vendi R$ 25.000 em ações no mês e lucrei R$ 200. Quanto pago de IR?", opts: ["Zero (isenção)","R$ 30 (15% sobre R$ 200)","R$ 750 (15% sobre R$ 5.000 que excedeu)","R$ 40 (20% sobre R$ 200)"], correct: 1, why: "Vendas > R$ 20k = perde isenção. IR de 15% sobre TODO o lucro (R$ 200), não só o excedente." },
   { q: "Tive prejuízo de R$ 5.000 em day trade e ganho de R$ 8.000 no à vista. Posso compensar?", opts: ["Sim, integralmente","Não, day trade só compensa com day trade","Sim, mas só 50%","Sim, mas no mesmo mês apenas"], correct: 1, why: "Não cruza. Os R$ 8k do à vista pagam 15% normais. Os R$ 5k de prejuízo ficam acumulados pra futuros day trades." },
@@ -319,7 +355,7 @@ const DIFICIL = [
   { q: "Em ordem limitada, se preço final do IPO ultrapassar o limite, o que acontece?", opts: ["Compra parcial","Compra ao preço limite","Negócio não é fechado, zero alocação","Cobra multa do investidor"], correct: 2, why: "Ordem limitada não fecha se preço > limite. Por isso protege contra preço alto, mas pode resultar em zero alocação." },
   { q: "Por que ON tem ganhado preferência sobre PN no Brasil?", opts: ["Tributação mais baixa","Padrão internacional, Novo Mercado só ON, governança melhor percebida","Lei mudou em 2010","CVM proibiu novas PN"], correct: 1, why: "Padrão global prioriza ON. Novo Mercado só admite ON. Institucional prefere voto. PN ficou associada a governança fraca." },
   { q: "Penny stock é definido como ação:", opts: ["De empresa pequena","Negociada abaixo de R$ 1, excluída do Ibovespa","Que paga pouco dividendo","Sem liquidez"], correct: 1, why: "Penny stock = ação < R$ 1. Pela regra da B3, excluída do Ibovespa. Empresa faz grupamento pra escapar." },
-  { q: "Quais NÃO é fonte típica de risco específico de uma empresa?", opts: ["Dependência de poucos clientes","Preço de matérias-primas","Crise macroeconômica global","Qualidade da gestão"], correct: 2, why: "Crise macro = risco SISTEMÁTICO (de mercado). Os outros são específicos da empresa." },
+  { q: "Qual NÃO é fonte típica de risco específico de uma empresa?", opts: ["Dependência de poucos clientes","Preço de matérias-primas","Crise macroeconômica global","Qualidade da gestão"], correct: 2, why: "Crise macro = risco SISTEMÁTICO (de mercado). Os outros são específicos da empresa." },
   { q: "Quem é responsável por calcular e recolher o IR sobre ganho em ações?", opts: ["A corretora, automaticamente","A B3","O próprio investidor, via DARF","A Receita Federal"], correct: 2, why: "Investidor calcula sozinho mensalmente, emite DARF e paga até último dia útil do mês seguinte." },
   { q: "Além de ações, o que conta nos 67% mínimos em RV de um clube?", opts: ["Só ações","Bônus de subscrição, debêntures conversíveis em ações, ETFs, certificados de depósito em ações","Títulos públicos","Renda fixa bancária"], correct: 1, why: "Os 67% incluem ações + instrumentos com exposição ao risco de ações: bônus subscrição, debêntures conversíveis, ETFs, BDRs." },
   { q: "JCP é dedutível em qual regime tributário?", opts: ["Lucro real","Lucro presumido","Simples Nacional","Em qualquer regime"], correct: 0, why: "Só lucro real permite dedução de JCP. No presumido, não há benefício fiscal de distribuir JCP." },
@@ -340,7 +376,159 @@ const DIFICIL = [
   { q: "S.A. com Estatuto omisso sobre dividendo obrigatório. A lei garante mínimo de:", opts: ["10% do lucro","25% do lucro","50% do lucro líquido ajustado","100% do lucro"], correct: 2, why: "Na omissão do Estatuto, Lei das S.A. define dividendo mínimo de 50% do lucro líquido ajustado." }
 ];
 
-// ---- App state ----
+// ============================================================
+//  BANCO FUNDOS DE INVESTIMENTO (CAP 5)
+// ============================================================
+const FU_FACIL = [
+  { q: "Fundo de investimento é juridicamente:", opts: ["Pessoa jurídica","Condomínio de natureza especial (comunhão de recursos)","Cooperativa","Sociedade limitada"], correct: 1, why: "Fundo é condomínio especial (Lei da Liberdade Econômica). Comunhão de recursos pra aplicação coletiva." },
+  { q: "Cota de fundo representa:", opts: ["Direito de voto","Fração ideal do patrimônio líquido do fundo","Dívida do fundo com o cotista","Pagamento periódico fixo"], correct: 1, why: "Cota = fração ideal do PL. Escritural, nominativa." },
+  { q: "Cotista de fundo é:", opts: ["Sócio do gestor","Pessoa que detém cotas, em proporção ao valor aportado","Funcionário do administrador","Cliente da CVM"], correct: 1, why: "Cotista é dono de cotas, condômino. Direitos proporcionais ao número de cotas." },
+  { q: "Diferença entre FI e FIC:", opts: ["FI é aberto, FIC é fechado","FI investe direto em ativos; FIC investe em cotas de outros fundos","FI tem FGC, FIC não","Não há diferença"], correct: 1, why: "FI investe direto em ações, títulos, derivativos. FIC investe pelo menos 95% em cotas de outros fundos." },
+  { q: "Fundo aberto x fundo fechado:", opts: ["Aberto não tem cotização; fechado tem","Aberto: entrada e saída a qualquer momento; fechado: só em períodos definidos","Não há diferença prática","Aberto é maior que fechado"], correct: 1, why: "Aberto permite aplicação e resgate quando o cotista quiser. Fechado só em janelas, ou vencimento." },
+  { q: "Patrimônio segregado do fundo significa:", opts: ["O PL é dividido em duas contas","Os ativos do fundo não se misturam com os do administrador/gestor","O fundo é segregado por estado","Cada cotista tem seu patrimônio individual"], correct: 1, why: "Patrimônio do fundo é separado dos prestadores. Se administrador/gestor quebra, ativos do fundo não vão pra massa falida." },
+  { q: "Quais são os prestadores de serviço ESSENCIAIS de um fundo?", opts: ["CVM e Bacen","Administrador Fiduciário e Gestor de Recursos","Custodiante e auditor","Cotista controlador e distribuidor"], correct: 1, why: "Os dois essenciais: Administrador (fiduciário) e Gestor (de carteira). Outros são contratados em nome do fundo." },
+  { q: "Administrador Fiduciário é responsável por:", opts: ["Comprar e vender ativos","Administração, funcionamento, divulgação, controladoria, apreçamento","Pagar dividendos","Negociar com a Receita Federal"], correct: 1, why: "Administrador cuida da operação do fundo: registro, contabilidade, divulgação, controle, apreçamento. Não decide compras/vendas." },
+  { q: "Gestor de Recursos é responsável por:", opts: ["Recolhimento de IR","Decisões de compra e venda de ativos (decisões de investimento)","Distribuição de cotas no varejo","Cobrança da taxa de administração"], correct: 1, why: "Gestor decide a composição da carteira: o que comprar, vender, quando. PJ autorizada CVM + certificada ANBIMA." },
+  { q: "Taxa de administração remunera:", opts: ["O Bacen","A operacionalização do fundo (administrador + serviços contratados)","O IR","O cotista pelo aporte"], correct: 1, why: "Taxa de adm = % a.a. sobre PL, descontada DIARIAMENTE da cota. Cobre administração + serviços contratados." },
+  { q: "Taxa de performance remunera:", opts: ["A custódia","O gestor por superar o benchmark, cobrada só sobre o excedente","O distribuidor","O auditor independente"], correct: 1, why: "Performance = sobre o EXCEDENTE ao benchmark. Mínima semestral, líquida de despesas." },
+  { q: "Taxa de ingresso é cobrada:", opts: ["Diariamente","Na aplicação, sobre o valor aplicado (raro no Brasil)","No resgate","Mensalmente"], correct: 1, why: "Ingresso = entrada. Cobrada na aplicação, sobre o valor aportado. Pouco usada no Brasil." },
+  { q: "Taxa de saída é cobrada:", opts: ["Em todo resgate","No resgate antecipado, sobre o valor resgatado (raro)","Diariamente","Na constituição do fundo"], correct: 1, why: "Saída = cobrança em resgate antecipado, sobre o valor resgatado. Pouco usada no Brasil." },
+  { q: "Marcação a mercado (apreçamento) é:", opts: ["Atualização semestral do valor dos ativos","Atualização diária do valor dos ativos pelo preço de mercado","Estimativa do gestor","Avaliação contábil pelo custo de aquisição"], correct: 1, why: "MtM = atualização diária ao preço de mercado. Garante preço justo na entrada e saída, evita transferência de riqueza entre cotistas." },
+  { q: "Gestão ATIVA tem por objetivo:", opts: ["Replicar o benchmark","Superar o benchmark ou retorno absoluto","Manter caixa parado","Reduzir taxas"], correct: 1, why: "Ativa busca bater o benchmark via seleção. Passiva apenas replica." },
+  { q: "Gestão PASSIVA tem por objetivo:", opts: ["Bater o benchmark com folga","Replicar o benchmark (ex: Fundo Ibovespa Indexado)","Bater a Selic","Lucrar com volatilidade"], correct: 1, why: "Passiva = replicar o índice de referência. Custo menor, sem aposta de gestão." },
+  { q: "Quais são as principais classes CVM de fundos?", opts: ["Conservador, Moderado, Agressivo","Renda Fixa, Ações, Multimercado, Cambial","Curto, Médio, Longo Prazo","Pequenas, Médias, Grandes"], correct: 1, why: "Classes CVM: Renda Fixa, Ações, Multimercado, Cambial (mais Incentivado em Infra e Garantia de Locação Imobiliária)." },
+  { q: "Come-cotas é:", opts: ["Comissão da gestora","IR antecipado, retido pelo administrador em maio e novembro","Taxa especial de resgate","Cobrança de quem resgata antes de 30 dias"], correct: 1, why: "Come-cotas = antecipação semestral do IR (maio e nov), pela menor alíquota da categoria. Não incide em fundos de Ações." },
+  { q: "IOF em fundos incide:", opts: ["Sobre o valor aplicado","Sobre o rendimento, em resgates antes de 30 dias","Sobre a taxa de administração","Sobre o patrimônio do fundo"], correct: 1, why: "IOF sobre rendimento, tabela regressiva: 96% no dia 1 → 0% no dia 30. Após 30 dias, sem IOF." },
+  { q: "O Regulamento do fundo é:", opts: ["Resumo de marketing","Documento completo que rege o fundo (política, taxas, prestadores, regras)","Cartilha pro cotista","Material publicitário"], correct: 1, why: "Regulamento = constituição do fundo. Só muda em AG ou por determinação CVM." },
+  { q: "A Lâmina de Informações Essenciais serve pra:", opts: ["Substituir o regulamento","Resumo padronizado que permite comparar fundos","Pagar dividendos","Calcular IR"], correct: 1, why: "Lâmina = resumo padronizado pra comparar fundos. Pode ser dispensada em alguns casos." },
+  { q: "O Termo de Adesão e Ciência de Risco:", opts: ["É opcional","Cotista assina antes da primeira aplicação, com até 5.000 caracteres e os 5 principais riscos","Substitui a lâmina","É enviado anualmente"], correct: 1, why: "Termo assinado antes de aplicar. Atesta acesso a documentos, ciência de riscos, ausência de garantia, possível aporte adicional." },
+  { q: "Fundo de Ações deve ter no mínimo qual % em ações?", opts: ["51%","60%","67%","80%"], correct: 2, why: "Fundo de Ações: mín 67% em ações, BDR II/III, FIA/ETF, certificados/bônus." },
+  { q: "Fundo Cambial deve ter no mínimo qual % em moeda estrangeira?", opts: ["50%","67%","80%","95%"], correct: 2, why: "Fundo Cambial: 80% em ativos relacionados a moeda estrangeira." },
+  { q: "Fundo de Renda Fixa deve ter no mínimo qual % em ativos atrelados a juros/índice de preços?", opts: ["51%","67%","80%","95%"], correct: 2, why: "Renda Fixa: 80% em ativos atrelados a juros e/ou índice de preços." },
+  { q: "Risco de crédito é:", opts: ["Risco de o preço cair","Risco de a contraparte não cumprir a obrigação","Risco de não conseguir vender","Risco de gestão ruim"], correct: 1, why: "Crédito = inadimplência (parcial, total, atraso). Cotista de fundo NÃO corre risco da gestora, só dos ativos da carteira." },
+  { q: "Risco de liquidez é:", opts: ["Risco da inflação corroer o ganho","Risco de não conseguir vender ao preço justo (volume baixo, spread alto)","Risco de o gestor errar a estratégia","Risco de IR aumentar"], correct: 1, why: "Liquidez = dificuldade de negociar a preço justo. Medido por volume e spread." },
+  { q: "Risco de mercado é:", opts: ["Risco da bolsa falir","Variação de preço por fatores macro, políticos ou específicos","Risco de IR mudar","Risco de fraude"], correct: 1, why: "Mercado = variação de preços por fatores diversos. Não eliminável por diversificação (risco sistemático)." },
+  { q: "Diversificação serve pra:", opts: ["Aumentar o retorno","Reduzir risco específico, aproveitando correlação imperfeita entre ativos","Eliminar todo o risco","Reduzir o IR"], correct: 1, why: "Risco de carteira < soma dos riscos individuais. Risco específico some, sistemático permanece." },
+  { q: "Assembleia Geral de cotistas (AG):", opts: ["Convocada pelo cotista que quiser","Reunião deliberativa dos cotistas, com competências privativas (taxa, regulamento, prestador, fusão)","Define cotação diária","Define remuneração do auditor"], correct: 1, why: "AG decide: contas, mudança de regulamento, aumento de taxas, fusão/cisão, substituição de prestador essencial, insolvência, plano pra PL negativo." },
+  { q: "Quem regula fundos de investimento no Brasil?", opts: ["Bacen","CVM (Resolução CVM 175/22)","Receita Federal","Tesouro Nacional"], correct: 1, why: "CVM regula fundos via Resolução 175/22 e anexos normativos. Bacen regula instituições financeiras." },
+  { q: "Fundo de investimento tem cobertura do FGC?", opts: ["Sim, até R$ 250 mil","Sim, até R$ 1 milhão","Não tem cobertura do FGC","Só fundos de renda fixa"], correct: 2, why: "Fundo NÃO tem FGC. Em vez disso, tem patrimônio segregado dos prestadores. CDB tem FGC (R$ 250k/CPF)." },
+  { q: "Fundo de investimento tem CNPJ próprio?", opts: ["Não, usa CNPJ do administrador","Sim, fundo e classes têm CNPJ próprio","Só fundos fechados","Só fundos de varejo"], correct: 1, why: "Fundo tem CNPJ e escrituração contábil próprias. Patrimônio segregado dos prestadores." },
+  { q: "Cotas de fundo são:", opts: ["Físicas, ao portador","Escriturais, nominativas, frações ideais do PL","Cartulares, transferíveis ao portador","Eletrônicas e anônimas"], correct: 1, why: "Cotas = escriturais (registro eletrônico), nominativas (identificam titular), frações ideais do PL." },
+  { q: "Mudança no regulamento do fundo requer:", opts: ["Decisão do gestor","Aprovação em assembleia geral (ou determinação da CVM)","Aviso aos cotistas com 30 dias","Concordância do auditor"], correct: 1, why: "Regulamento muda em AG ou por determinação CVM. Algumas mudanças tem efeito imediato com direito de retirada." },
+  { q: "Taxa de administração é cobrada:", opts: ["Anualmente, em janeiro","% a.a. sobre o PL, descontada DIARIAMENTE da cota","No resgate","Só sobre o lucro"], correct: 1, why: "Adm = pro rata diário sobre o PL. Por isso a cota divulgada já é líquida de adm. Fixa, não depende de performance." },
+  { q: "Antes da primeira aplicação, o administrador entrega ao cotista:", opts: ["Apenas o termo de adesão","Regulamento e lâmina","Demonstração de desempenho","Carta-convite"], correct: 1, why: "Cotista recebe regulamento + lâmina antes da primeira aplicação, e assina termo de adesão e ciência de risco." },
+  { q: "Princípio da equidade entre cotistas:", opts: ["Todos têm mesmos direitos, independente da quantidade de cotas","Cotistas grandes têm mais voto","Cotistas antigos pagam menos taxa","Equidade só se aplica ao gestor"], correct: 0, why: "Equidade: todos cotistas com mesmos direitos. Diferenciação só por subclasse (público-alvo, prazos, taxas)." },
+  { q: "Extrato do fundo é enviado ao cotista:", opts: ["Diariamente","Mensalmente","Semestralmente","Apenas no resgate"], correct: 1, why: "Extrato mensal obrigatório. Demonstrações contábeis e desempenho são anuais/semestrais." },
+  { q: "Cotista pode receber comunicações do fundo por meio eletrônico?", opts: ["Não, só físico","Sim, é o padrão; físico só por solicitação","Só se tiver mais de R$ 1mi aplicado","Não há comunicação obrigatória"], correct: 1, why: "Padrão = eletrônico. Físico só por solicitação do cotista, com custo conforme regulamento." }
+];
+
+const FU_MEDIO = [
+  { q: "Cota D+0 só pode ser usada em quais fundos?", opts: ["Fundos de Ações","Fundos de Multimercado alavancado","Fundos de baixa volatilidade: Renda Fixa, Exclusivos, Previdenciários","Qualquer fundo, é livre"], correct: 2, why: "D+0 só em baixa volatilidade. Demais usam D+1 (valor da cota só conhecido após fechamento)." },
+  { q: "Prazo máximo CVM pra pagamento do resgate após a conversão:", opts: ["1 dia útil","3 dias úteis","5 dias úteis","30 dias corridos"], correct: 2, why: "5 dias úteis após conversão. Atraso: 0,5% por dia ao cotista, salvo iliquidez excepcional." },
+  { q: "Atraso no pagamento de resgate: penalidade ao cotista?", opts: ["0,1%/dia","0,5%/dia","1%/dia","Sem penalidade prevista"], correct: 1, why: "0,5% sobre o valor do resgate por dia de atraso, paga ao cotista. Exceção: iliquidez excepcional." },
+  { q: "Antecedência mínima de convocação de Assembleia Geral:", opts: ["3 dias","5 dias","10 dias","30 dias"], correct: 2, why: "Mínimo 10 dias. AGO anual: convocação até 120 dias após o fim do exercício pra deliberar contábeis." },
+  { q: "Percentual mínimo de cotistas pra convocar uma Assembleia Geral:", opts: ["1%","3%","5%","10%"], correct: 2, why: "Cotistas com pelo menos 5% das cotas podem convocar AG. Além deles: administrador, gestor, custodiante." },
+  { q: "AGO (Assembleia Geral Ordinária) tem prazo de:", opts: ["Até 30 dias após o exercício","Até 90 dias","Até 120 dias após o fim do exercício social","Até 180 dias"], correct: 2, why: "AGO até 120 dias após o fim do exercício social, pra deliberar sobre as demonstrações contábeis." },
+  { q: "FIC deve aplicar no mínimo qual % do PL em cotas de outros fundos?", opts: ["51%","67%","80%","95%"], correct: 3, why: "FIC: mínimo 95% em cotas de outros fundos. Até 5% fora pra gestão de liquidez." },
+  { q: "Limite máximo de concentração CVM por emissor: União (TPF):", opts: ["20%","50%","80%","100%"], correct: 3, why: "TPF: 100% do PL. Mesma regra pra fundos federais." },
+  { q: "Limite máximo de concentração por emissor: Instituição Financeira:", opts: ["10%","20%","50%","100%"], correct: 1, why: "IF (bacen): 20% do PL." },
+  { q: "Limite máximo de concentração por emissor: Companhia aberta:", opts: ["5%","10%","20%","30%"], correct: 1, why: "Cia aberta ou SPE-S2: 10% do PL." },
+  { q: "Limite máximo de concentração por emissor: Pessoa física ou jurídica privada (não cia aberta nem IF):", opts: ["5%","10%","20%","30%"], correct: 0, why: "Privado: 5% do PL. Bem mais restrito que cia aberta (10%) e IF (20%)." },
+  { q: "Investidor PROFISSIONAL: limite de investimento no exterior em um fundo:", opts: ["20%","40%","67%","100%"], correct: 3, why: "Profissional: até 100% no exterior. Também vale pra fundos RF Dívida Externa." },
+  { q: "Investidor VAREJO (público em geral): limite de investimento no exterior em um fundo:", opts: ["10%","20%","40%","100%"], correct: 1, why: "Varejo: até 20% no exterior. Profissional pode até 100%." },
+  { q: "Fundo \"Crédito Privado\" tem mais de qual % do PL em ativos privados?", opts: ["20%","30%","50%","80%"], correct: 2, why: "> 50% em privado (ou não-União) = obriga \"Crédito Privado\" no nome, alerta no regulamento, e termo de ciência específico." },
+  { q: "Multa CVM por atraso em informe periódico, ao administrador:", opts: ["R$ 100/dia","R$ 200/dia","R$ 500/dia","R$ 1.000/dia"], correct: 2, why: "R$ 500 por dia de atraso, ao administrador. Informes diários, mensais e anuais." },
+  { q: "Fundo de Ações: padrão de conversão e pagamento do resgate:", opts: ["D+0 e D+1","D+1 conversão e D+3 pagamento","D+2 e D+5","D+5 e D+10"], correct: 1, why: "FIA: D+1 conversão, D+3 pagamento. Porque B3 liquida ações em D+2." },
+  { q: "Fechamento do fundo para resgates por mais de quantos dias consecutivos exige AGE?", opts: ["2 dias","5 dias","10 dias","30 dias"], correct: 1, why: "Fechamento > 5 dias consecutivos: AGE obrigatória. Antes, fato relevante imediato." },
+  { q: "Side pocket é:", opts: ["Conta paralela do administrador","Cisão dos ativos ilíquidos pra nova classe/subclasse fechada","Fundo de hedge","Bolso especial pra dividendos"], correct: 1, why: "Side pocket = mecanismo de gestão de liquidez. Cinde ativos ilíquidos numa nova classe/subclasse fechada, mantendo a original líquida." },
+  { q: "Renda Fixa Curto Prazo: prazo médio da carteira deve ser:", opts: ["< 30 dias","< 60 dias","< 180 dias","< 365 dias"], correct: 1, why: "RF Curto Prazo: prazo médio da carteira < 60 dias. Título máximo 375 dias. Só baixa de risco, derivativos apenas pra hedge." },
+  { q: "Renda Fixa Simples: composição mínima exigida?", opts: ["95% em ações","95% em TPF, compromissadas lastreadas em TPF ou IF de risco soberano","80% em crédito privado","67% em multimercado"], correct: 1, why: "RF Simples: 95% em TPF/IF risco soberano. Estratégia de proteção. Compara com Selic na lâmina." },
+  { q: "Renda Fixa Simples DISPENSA:", opts: ["Apenas suitability","Auditoria","Termo de adesão e suitability (se primeiro investimento)","Regulamento"], correct: 2, why: "RF Simples dispensa termo de adesão e suitability se for o primeiro investimento do cotista. Só fundos abertos." },
+  { q: "IOF em fundos incide quando o resgate é feito em até:", opts: ["7 dias","15 dias","30 dias","60 dias"], correct: 2, why: "IOF sobre rendimento se resgate < 30 dias. Tabela regressiva: 96% dia 1 → 0% dia 30." },
+  { q: "IOF: alíquota máxima (dia 1):", opts: ["50%","75%","90%","96%"], correct: 3, why: "Dia 1 = 96%. Vai descendo até 0% no dia 30. Penalização forte pra desestimular resgates muito rápidos." },
+  { q: "IR em fundo CURTO PRAZO: alíquota MÁXIMA e MÍNIMA:", opts: ["22,5% e 15%","22,5% e 20%","20% e 17,5%","22,5% e 17,5%"], correct: 1, why: "Curto Prazo: 22,5% até 180d, 20% acima. Nunca desce abaixo de 20%. Diferente de longo prazo (que vai a 15%)." },
+  { q: "IR em fundo LONGO PRAZO: alíquota MÍNIMA (acima de 720 dias):", opts: ["10%","15%","17,5%","20%"], correct: 1, why: "Longo Prazo: tabela regressiva 22,5/20/17,5/15. Mínima 15% acima de 720 dias." },
+  { q: "IR em fundo de AÇÕES: alíquota:", opts: ["Tabela regressiva","15% fixa, só no resgate","20% retido na fonte","Isento"], correct: 1, why: "Fundo de Ações: 15% fixo, só no resgate. SEM come-cotas." },
+  { q: "Come-cotas em fundo CURTO PRAZO: alíquota:", opts: ["15%","17,5%","20%","22,5%"], correct: 2, why: "Curto Prazo: come-cotas 20% (a MENOR da categoria). Diferença pra alíquota efetiva do resgate é ajustada no resgate." },
+  { q: "Come-cotas em fundo LONGO PRAZO: alíquota:", opts: ["15%","17,5%","20%","22,5%"], correct: 0, why: "Longo Prazo: come-cotas 15% (a MENOR da categoria). Diferença é ajustada no resgate conforme o prazo." },
+  { q: "Fundo de Ações tem come-cotas?", opts: ["Sim, 15%","Sim, 20%","Não tem come-cotas","Sim, apenas em maio"], correct: 2, why: "Ações NÃO tem come-cotas. IR só no resgate, 15% fixo." },
+  { q: "Em quais meses ocorre o come-cotas?", opts: ["Janeiro e julho","Junho e dezembro","Maio e novembro","Março e setembro"], correct: 2, why: "Come-cotas: último dia útil de MAIO e NOVEMBRO, semestralmente." },
+  { q: "Compensação de perdas em fundos: regra principal:", opts: ["Livre, qualquer fundo com qualquer fundo","Só dentro da mesma classificação tributária (curto com curto, longo com longo); Ações só com Ações","Só no mesmo mês","Não é permitida"], correct: 1, why: "Compensação restrita à mesma classificação tributária. Possível entre fundos de administradores diferentes se houver mesma intermediação." },
+  { q: "Aumento de taxa de administração requer:", opts: ["Decisão do gestor","Aprovação em Assembleia Geral","Comunicado aos cotistas","Autorização da Receita Federal"], correct: 1, why: "Aumento de taxa adm, gestão, performance ou máx custódia: só em AG. Redução é unilateral pelo administrador." },
+  { q: "Redução de taxa de administração requer:", opts: ["Aprovação em AG","Autorização da CVM","Decisão unilateral do administrador (sem AG)","Voto de 2/3 dos cotistas"], correct: 2, why: "Redução é benéfica ao cotista, dispensa AG. Só aumento requer assembleia." },
+  { q: "Taxa de performance: vinculação mínima ao benchmark:", opts: ["50%","80%","100%","Sem limite mínimo"], correct: 2, why: "Vedada vinculação a percentual inferior a 100% do benchmark. Performance só sobre o que excede 100% do índice." },
+  { q: "Taxa de performance: periodicidade MÍNIMA de cobrança:", opts: ["Mensal","Trimestral","Semestral","Anual"], correct: 2, why: "Mínimo semestral. Cobrada após dedução de despesas e taxas." },
+  { q: "Taxa de performance é VEDADA em quais classes (regra geral)?", opts: ["Apenas Cambial","RF Curto Prazo, Referenciado e Renda Fixa simples (com exceções)","Multimercado","Fundo de Ações"], correct: 1, why: "Vedada em RF Curto Prazo, Referenciado e RF simples, exceto qualificados, RF com compromisso de longo prazo, ou RF Dívida Externa." },
+  { q: "Termo de Adesão e Ciência de Risco: máximo de caracteres:", opts: ["1.000","2.500","5.000","10.000"], correct: 2, why: "Máximo 5.000 caracteres. Lista os 5 principais fatores de risco." },
+  { q: "Cotista com 6% das cotas convoca uma AG: é permitido?", opts: ["Não, mínimo 10%","Sim, basta 5% das cotas","Não, só administrador convoca","Sim, sem limite"], correct: 1, why: "5% é o mínimo, então 6% basta. Também podem convocar administrador, gestor e custodiante." },
+  { q: "Limite de concentração por administrador/gestor e empresas ligadas:", opts: ["5%","10%","20%","100%"], correct: 2, why: "Partes ligadas (administrador, gestor, ligadas): até 20% do PL." },
+  { q: "Demonstração de desempenho do fundo é divulgada com qual periodicidade?", opts: ["Mensal","Trimestral","Semestral (último dia útil de fev e ago)","Anual"], correct: 2, why: "Demonstração de desempenho: semestral. Rentabilidade 12m mensal, 5a anual, despesas e simulações." }
+];
+
+const FU_DIFICIL = [
+  { q: "Em fundo com sufixo \"Responsabilidade Limitada\", se o PL ficar negativo:", opts: ["Cotistas aportam recursos adicionais","Insolvência judicial; cotista perde no máximo o aporte","Administrador cobre com PL próprio","CVM assume o fundo"], correct: 1, why: "Resp Limitada = cotista limitado ao valor subscrito. PL negativo = insolvência judicial. Sem o sufixo, cotista aporta a diferença." },
+  { q: "Cotista pode vender cotas de fundo ABERTO livremente a terceiros?", opts: ["Sim, em bolsa","Não, transferência só em situações taxativas (judicial, sucessão, conjugal etc.)","Sim, via termo de cessão","Só com autorização da CVM"], correct: 1, why: "Fundo aberto: cotas intransferíveis fora dos casos taxativos. Pra sair, resgate. Fundo fechado é diferente (cessão ou mercado)." },
+  { q: "Quem é VEDADO de votar em Assembleia Geral?", opts: ["Cotistas com menos de 5%","Prestadores de serviço, sócios, partes relacionadas, cotistas com conflito de interesse","Cotistas estrangeiros","Cotistas pessoa jurídica"], correct: 1, why: "Vedados: prestadores essenciais ou não, sócios/diretores/funcionários, partes relacionadas, cotistas em conflito de interesse." },
+  { q: "Diferença entre Assembleia Geral (AG) e Assembleia Especial (AE):", opts: ["AG é virtual, AE presencial","AG: todos os cotistas do fundo; AE: só os de uma classe ou subclasse específica","AG é convocada pelo gestor, AE pelo administrador","Não há diferença"], correct: 1, why: "AG = todos. AE = só cotistas de uma classe/subclasse específica, pra deliberar matérias daquela classe." },
+  { q: "Sobre garantia FGC: CDB tem, fundo de investimento tem?", opts: ["Ambos têm","Só CDB tem (R$ 250k/CPF). Fundo NÃO tem FGC","Só fundo tem","Nenhum tem"], correct: 1, why: "CDB tem FGC. Fundo NÃO tem. Em vez disso, fundo tem patrimônio segregado dos prestadores." },
+  { q: "Rentabilidade divulgada do fundo é:", opts: ["Líquida de tudo (taxas + IR)","Bruta de tudo","Líquida de taxas (adm, gestão, performance), mas BRUTA de IR","Líquida só de IR"], correct: 2, why: "Pegadinha. Divulgada já considera taxas (cota é descontada), mas é bruta de IR. Cotista paga IR sobre essa rentabilidade." },
+  { q: "Pode-se cobrar taxa de performance em fundo de Renda Fixa Curto Prazo?", opts: ["Sim, sem restrições","Não, é vedado (exceto qualificados ou RF com compromisso de longo prazo)","Sim, se aprovado em AG","Só após 1 ano"], correct: 1, why: "Vedada em RF Curto Prazo, Referenciado e RF simples. Exceções: qualificados, RF de longo prazo, RF Dívida Externa." },
+  { q: "FIC Multimercado tem alguma flexibilidade especial em sua aplicação?", opts: ["Não, igual aos demais FICs","Pode investir em fundos de tipos diferentes (não só do mesmo tipo)","Pode ter menos de 95% em cotas","Pode cobrar taxa de saída"], correct: 1, why: "FIC normal só investe em fundos do mesmo tipo. FIC Multimercado pode misturar tipos diferentes." },
+  { q: "Marcação a mercado (apreçamento) tem como função principal:", opts: ["Reduzir o IR do fundo","Evitar transferência de riqueza entre cotistas que aplicam e resgatam","Aumentar a rentabilidade","Atender à Receita Federal"], correct: 1, why: "MtM garante preço justo na entrada/saída. Sem MtM, quem aplica ou resgata se beneficia ou perde injustamente vs os demais cotistas." },
+  { q: "Fundo ALAVANCADO pode gerar perda superior ao patrimônio aplicado?", opts: ["Não, perda máxima é o aporte","Sim, alavancagem com derivativos pode levar a perdas > patrimônio","Só se for fundo de ações","Só com autorização da CVM"], correct: 1, why: "Fundo alavancado usa derivativos pra ampliar exposição. Pode gerar perda > PL, e cotista (sem resp limitada) cobre a diferença." },
+  { q: "Cotista de fundo corre risco de crédito da gestora?", opts: ["Sim, integralmente","Não, só dos ativos da carteira","Sim, parcialmente","Depende do tipo de fundo"], correct: 1, why: "Cotista NÃO corre risco da gestora, só dos ativos da carteira. Patrimônio segregado protege contra falência dos prestadores." },
+  { q: "Fundo ABERTO pode ser negociado em bolsa?", opts: ["Sim, livremente","Sim, em mercado de balcão","Não. Apenas fundos FECHADOS (como FII) podem ter cotas negociadas em mercado","Só após 1 ano"], correct: 2, why: "Fundo aberto: cotas só por resgate ou transferência taxativa, nunca em mercado. Fundo fechado (ex: FII) pode ser negociado em B3." },
+  { q: "Em fundo FECHADO, como o cotista sai antes do vencimento?", opts: ["Resgate direto","Por cessão via termo ou negociação em mercado organizado","Só com decisão judicial","Só na assembleia anual"], correct: 1, why: "Fechado não permite resgate direto. Saída: termo de cessão ou venda em mercado (ex: FII na B3)." },
+  { q: "Alíquota do come-cotas é a MAIOR ou MENOR da categoria?", opts: ["A maior","A menor","A média","Varia caso a caso"], correct: 1, why: "Come-cotas usa a MENOR alíquota da categoria (20% curto, 15% longo). Diferença pra alíquota real é ajustada no resgate." },
+  { q: "Compensação entre fundos de administradores diferentes:", opts: ["Não é possível","É possível se houver intermediação pela mesma PJ","Só com autorização da CVM","Sempre permitido, sem restrição"], correct: 1, why: "Possível desde que tenha mesma intermediação. Caso comum: investidor opera em uma plataforma, mas os fundos são de admins diferentes." },
+  { q: "Qual destes ativos tem limite SEM teto de concentração no PL do fundo?", opts: ["Companhias abertas (10%)","Crédito privado (5%)","Títulos públicos federais (sem limite)","Cotas de FIDC (20%)"], correct: 2, why: "TPF, ouro B3, IF, ações em oferta pública, BDR, derivativos: sem limite. União: 100%. Demais têm tetos." },
+  { q: "Limite de concentração no PL pra ativos de partes ligadas (administrador/gestor/empresas ligadas):", opts: ["5%","10%","20%","Sem limite"], correct: 2, why: "Partes ligadas: 20% do PL. Mesmo limite de IF, pra evitar concentração em empresas do grupo." },
+  { q: "Penalidade por atraso em resgate (0,5%/dia): vai pra quem?", opts: ["Administrador","Gestor","Cotista lesado","Fundo Garantidor"], correct: 2, why: "Penalidade é PRO COTISTA, paga pelo administrador (ou gestor, conforme o caso). Salvo iliquidez excepcional documentada." },
+  { q: "Auditoria independente em fundo é:", opts: ["Opcional","Obrigatória, contratada pelo administrador em nome do fundo","Só obrigatória em fundos > R$ 100mi","Feita pela CVM"], correct: 1, why: "Auditoria independente é obrigatória, contratada pelo administrador em nome do fundo. Parecer acompanha demonstrações contábeis anuais." },
+  { q: "Prestadores de serviço essenciais respondem por obrigações do fundo?", opts: ["Sim, solidariamente","Não, só por prejuízos causados com dolo ou má-fé","Sim, integralmente","Só os contratados em nome do fundo"], correct: 1, why: "Prestadores não respondem por obrigações do fundo. Só por prejuízos com dolo ou má-fé. Obrigação de meio, não de resultado. Sem solidariedade." },
+  { q: "Renda Fixa Curto Prazo: o IR pode descer abaixo de 20%?", opts: ["Sim, vai a 15% após 720 dias","Não, mínimo 20% (mesmo após muito tempo)","Sim, a 17,5% após 360 dias","Vai a 0% após 5 anos"], correct: 1, why: "Curto Prazo: 22,5% até 180d, 20% acima. NUNCA desce a 17,5% ou 15%. Apenas Longo Prazo desce até 15%." },
+  { q: "Fundo aberto pode ter vencimento (prazo de duração)?", opts: ["Sim, sempre","Não, vencimento é exclusividade de fundo fechado","Só se aprovado em AG","Só fundos > 5 anos"], correct: 1, why: "Fundo aberto: sem vencimento, dura indefinidamente. Fechado: pode ter prazo definido em regulamento." },
+  { q: "Aplica R$ 10.000 em Fundo Curto Prazo, resgata em 200 dias com lucro de R$ 1.000. Qual IR?", opts: ["R$ 150 (15%)","R$ 175 (17,5%)","R$ 200 (20%)","R$ 225 (22,5%)"], correct: 2, why: "Curto Prazo, 200 dias = 20% (acima de 180). 1.000 × 20% = R$ 200. Em curto prazo, IR nunca desce de 20%." },
+  { q: "Aplica em Fundo Longo Prazo, resgata após 730 dias com lucro de R$ 1.000. Qual IR?", opts: ["R$ 150 (15%)","R$ 175 (17,5%)","R$ 200 (20%)","R$ 225 (22,5%)"], correct: 0, why: "Longo Prazo > 720 dias = 15%. 1.000 × 15% = R$ 150. Mínima da tabela regressiva longa." },
+  { q: "Aplica em Fundo de Ações, resgata após 100 dias com lucro de R$ 1.000. Qual IR?", opts: ["R$ 150 (15%)","R$ 200 (20%)","R$ 225 (22,5%)","Zero (isento)"], correct: 0, why: "Fundo de Ações: 15% fixo, independente do prazo. 1.000 × 15% = R$ 150." },
+  { q: "Aplica em Fundo Longo Prazo, resgata em 100 dias (rápido) com lucro de R$ 1.000. Qual IR?", opts: ["R$ 150 (15%)","R$ 200 (20%)","R$ 225 (22,5%)","Depende"], correct: 2, why: "Longo Prazo: tabela regressiva. Até 180 dias = 22,5%. 1.000 × 22,5% = R$ 225. Resgate cedo, paga alíquota maior." },
+  { q: "Diferença entre RF Simples e RF Referenciado:", opts: ["Simples cobra performance, Referenciado não","Simples: 95% em soberano + dispensa termo e suitability + só aberto + compara com Selic. Referenciado: 95% em ativos do índice de referência, nome inclui o índice","Referenciado é mais conservador","Não há diferença"], correct: 1, why: "Simples: estratégia de proteção, soberano, dispensa termo. Referenciado: replica um índice (DI, IPCA), nome inclui o índice." },
+  { q: "Quem usa cota D+0 e quem usa D+1?", opts: ["Todos usam D+0","D+0 só em baixa volatilidade (RF, Exclusivo, Previdenciário); demais D+1","D+1 só em fundos de Ações","Depende do administrador"], correct: 1, why: "Regra CVM: D+0 só fundos de baixa volatilidade. D+1 nos demais, pra evitar arbitragem com a valorização do dia." },
+  { q: "Quem é responsável pelo apreçamento (marcação a mercado) dos ativos do fundo?", opts: ["Gestor","Administrador Fiduciário","CVM","Auditor independente"], correct: 1, why: "Apreçamento é responsabilidade do Administrador Fiduciário, junto com controladoria de ativos. Gestor decide compras/vendas." },
+  { q: "Cota de fundo é calculada como:", opts: ["Valor de mercado dividido pelo PL inicial","(Valor dos ativos − Despesas) / Número de cotas","Patrimônio aplicado pelo cotista / quantidade comprada","Sempre R$ 1,00"], correct: 1, why: "Valor da cota = (PL − despesas) / nº cotas, apurado no encerramento do dia." },
+  { q: "Se o valor da cota cai, o administrador ainda cobra taxa de administração?", opts: ["Não, só se houver ganho","Sim, taxa é fixa sobre o PL, cobrada diariamente, independente da performance","Sim, mas devolve no final do ano","Não, é proibido"], correct: 1, why: "Taxa de adm = % sobre PL, fixa, descontada DIARIAMENTE da cota. Cobra mesmo com cota caindo." },
+  { q: "Compensação de prejuízo de Fundo de Ações:", opts: ["Pode compensar com fundo RF","Só pode compensar com outro Fundo de Ações","Compensa com qualquer fundo, livre","Não pode compensar"], correct: 1, why: "Ações só compensa com Ações. Não pode cruzar com RF/Cambial/MM. Ações não tem come-cotas, IR só no resgate." },
+  { q: "Princípio da equidade entre cotistas: depende da quantidade de cotas?", opts: ["Sim, maior cota tem mais direitos","Não, todos os cotistas têm os mesmos direitos","Só se previsto em regulamento","Quem tem > 10% tem direitos especiais"], correct: 1, why: "Equidade: todos com mesmos direitos, independente da quantidade de cotas. Diferenciação só por subclasse (público-alvo, prazo, taxa)." },
+  { q: "Diferença entre Material Publicitário e Material Técnico:", opts: ["São sinônimos","Publicitário: estratégia comercial; Técnico: suporte à decisão de investimento, com classificação ANBIMA, objetivo, riscos, taxas","Técnico é só interno","Publicitário não pode mencionar rentabilidade"], correct: 1, why: "Publicitário pode mencionar rentabilidade, mas deve apontar pro Técnico. Técnico tem todas as info pra decisão informada." },
+  { q: "Termo de Adesão deve listar quantos fatores de risco?", opts: ["Todos os fatores","Os 5 principais riscos","Os 3 principais","Os 10 mais relevantes"], correct: 1, why: "Termo de adesão: máx 5.000 caracteres, lista os 5 PRINCIPAIS fatores de risco do fundo." },
+  { q: "Forma padrão de comunicação do fundo com o cotista é:", opts: ["Correio físico","Meio eletrônico (físico só por solicitação, com custo)","Telegrama","Notícia em jornal"], correct: 1, why: "Padrão = eletrônico. Físico só se cotista solicitar, com custo conforme regulamento. Vale pra extratos, fatos relevantes, voto." },
+  { q: "Fundo que se autodenomina \"Crédito Privado\" precisa de termo de ciência específico?", opts: ["Não, basta o regulamento","Sim, termo específico assinado por cada investidor, além do alerta no regulamento","Só pra investidores institucionais","Só se PL > R$ 100mi"], correct: 1, why: "Crédito Privado (>50% em privados/não-União) = nome do fundo + alerta no regulamento + termo específico. Risco de crédito mais alto." },
+  { q: "Substituição de prestador essencial (administrador ou gestor): formas válidas?", opts: ["Só por decisão da CVM","Descredenciamento CVM, renúncia, ou destituição em Assembleia Geral","Só por morte do prestador","Apenas com 100% dos cotistas"], correct: 1, why: "Três formas: descredenciamento CVM, renúncia do prestador, ou destituição em AG (competência privativa)." },
+  { q: "Pode ser cobrada taxa de performance em Fundo de Ações?", opts: ["Sim, livremente conforme regulamento","Não, é vedado","Só pra investidores qualificados","Só após 1 ano"], correct: 0, why: "Performance é permitida em Ações, Multimercado etc. Vedada (com exceções) em RF Curto Prazo, Referenciado e RF simples." },
+  { q: "Por que existe a barreira de informação (Chinese Wall) entre tesouraria do banco e a asset?", opts: ["Pra reduzir custos","Pra evitar conflito de interesse, fraudes e insider trading","Por exigência fiscal","Por organização administrativa"], correct: 1, why: "Chinese Wall = segregação física e administrativa. Evita que a asset use info da tesouraria do banco em benefício próprio ou em prejuízo dos cotistas." }
+];
+
+// ============================================================
+//  MOTOR DO QUIZ
+// ============================================================
+const GAMES = {
+  rv: {
+    name: "Renda Variável",
+    tag: "Cap 6 · Ações",
+    desc: "Quiz sobre ações, IPO, dividendos, JCP, riscos, tributação e clube de investimento.",
+    facil: RV_FACIL, medio: RV_MEDIO, dificil: RV_DIFICIL,
+    color: "rv"
+  },
+  fundos: {
+    name: "Fundos de Investimento",
+    tag: "Cap 5 · Fundos",
+    desc: "Quiz sobre fundos: FI/FIC, abertos/fechados, taxas, classes CVM, tributação, come-cotas, clube.",
+    facil: FU_FACIL, medio: FU_MEDIO, dificil: FU_DIFICIL,
+    color: "fundos"
+  }
+};
+
+let activeGame = null;
 let activeLevel = null;
 let order = [];
 let current = 0;
@@ -361,33 +549,76 @@ function shuffle(arr) {
   return a;
 }
 
-function renderIntro() {
+function renderGameSelect() {
+  activeGame = null;
+  activeLevel = null;
   metaPills.innerHTML = '';
   progressWrap.style.display = 'none';
   screen.innerHTML = `
     <div class="intro">
-      <h1>Quiz · Renda Variável</h1>
-      <p>Múltipla escolha com feedback imediato. Questões e alternativas embaralhadas a cada rodada. Escolha o nível pra começar.</p>
+      <h1>Escolha o jogo</h1>
+      <p>Dois quizzes independentes pra treinar pra prova ou pro gameshow da aula. Cada um tem 120 questões em 4 níveis.</p>
+      <div class="game-grid">
+        <button class="game-card" onclick="selectGame('rv')">
+          <div class="gc-tag">${GAMES.rv.tag}</div>
+          <div class="gc-name">${GAMES.rv.name}</div>
+          <div class="gc-desc">${GAMES.rv.desc}</div>
+          <div class="gc-stats">
+            <div><strong>120</strong> questões</div>
+            <div><strong>4</strong> níveis</div>
+          </div>
+        </button>
+        <button class="game-card fundos" onclick="selectGame('fundos')">
+          <div class="gc-tag">${GAMES.fundos.tag}</div>
+          <div class="gc-name">${GAMES.fundos.name}</div>
+          <div class="gc-desc">${GAMES.fundos.desc}</div>
+          <div class="gc-stats">
+            <div><strong>120</strong> questões</div>
+            <div><strong>4</strong> níveis</div>
+          </div>
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function selectGame(gameKey) {
+  activeGame = gameKey;
+  renderLevelSelect();
+}
+
+function renderLevelSelect() {
+  activeLevel = null;
+  metaPills.innerHTML = `<span class="pill game ${activeGame === 'fundos' ? 'fundos' : ''}">${GAMES[activeGame].name}</span>`;
+  progressWrap.style.display = 'none';
+  const g = GAMES[activeGame];
+  screen.innerHTML = `
+    <div class="back-bar">
+      <button class="btn ghost" onclick="renderGameSelect()">← Trocar jogo</button>
+    </div>
+    <div class="intro">
+      <h1>${g.name}</h1>
+      <p>${g.desc}</p>
       <div class="level-grid">
         <button class="level-card facil" onclick="startLevel('facil')">
           <div class="lvl-name">Fácil</div>
-          <div class="lvl-desc">Definições e identificação. ON, PN, dígitos da B3, conceitos base.</div>
-          <div class="lvl-count">${FACIL.length} questões</div>
+          <div class="lvl-desc">Definições e identificação.</div>
+          <div class="lvl-count">${g.facil.length} questões</div>
         </button>
         <button class="level-card medio" onclick="startLevel('medio')">
           <div class="lvl-name">Médio</div>
-          <div class="lvl-desc">Mecânica e regras com números. Tributação, IPO, eventos societários.</div>
-          <div class="lvl-count">${MEDIO.length} questões</div>
+          <div class="lvl-desc">Mecânica e regras com números.</div>
+          <div class="lvl-count">${g.medio.length} questões</div>
         </button>
         <button class="level-card dificil" onclick="startLevel('dificil')">
           <div class="lvl-name">Difícil</div>
-          <div class="lvl-desc">Pegadinhas, casos limite e cálculos. Os que mais caem em prova.</div>
-          <div class="lvl-count">${DIFICIL.length} questões</div>
+          <div class="lvl-desc">Pegadinhas, casos limite e cálculos.</div>
+          <div class="lvl-count">${g.dificil.length} questões</div>
         </button>
         <button class="level-card misturado" onclick="startLevel('misturado')">
           <div class="lvl-name">Misturado</div>
-          <div class="lvl-desc">40 aleatórios entre os 120. Modo prova: sem aviso de dificuldade.</div>
-          <div class="lvl-count">40 questões aleatórias</div>
+          <div class="lvl-desc">40 aleatórios entre os 120.</div>
+          <div class="lvl-count">40 aleatórias</div>
         </button>
       </div>
     </div>
@@ -396,14 +627,12 @@ function renderIntro() {
 
 function startLevel(level) {
   activeLevel = level;
+  const g = GAMES[activeGame];
   let pool;
-  if (level === 'facil') pool = FACIL;
-  else if (level === 'medio') pool = MEDIO;
-  else if (level === 'dificil') pool = DIFICIL;
-  else {
-    const all = [...FACIL, ...MEDIO, ...DIFICIL];
-    pool = shuffle(all).slice(0, 40);
-  }
+  if (level === 'facil') pool = g.facil;
+  else if (level === 'medio') pool = g.medio;
+  else if (level === 'dificil') pool = g.dificil;
+  else pool = shuffle([...g.facil, ...g.medio, ...g.dificil]).slice(0, 40);
   order = shuffle(pool);
   current = 0;
   score = 0;
@@ -416,6 +645,7 @@ function startLevel(level) {
 function updatePills() {
   const labels = { facil: 'Fácil', medio: 'Médio', dificil: 'Difícil', misturado: 'Misturado' };
   metaPills.innerHTML = `
+    <span class="pill game ${activeGame === 'fundos' ? 'fundos' : ''}">${GAMES[activeGame].name}</span>
     <span class="pill level ${activeLevel}">${labels[activeLevel]}</span>
     <span class="pill"><strong>${score}</strong> / ${order.length}</span>
   `;
@@ -512,14 +742,15 @@ function renderFinal() {
       <p class="sub">${comment}</p>
       <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
         <button class="btn" onclick="startLevel(activeLevel)">Refazer nível</button>
-        <button class="btn ghost" onclick="renderIntro()">Tela inicial</button>
+        <button class="btn ghost" onclick="renderLevelSelect()">Outro nível</button>
+        <button class="btn ghost" onclick="renderGameSelect()">Trocar jogo</button>
       </div>
       ${reviewHtml}
     </div>
   `;
 }
 
-renderIntro();
+renderGameSelect();
 </script>
 </body>
 </html>
